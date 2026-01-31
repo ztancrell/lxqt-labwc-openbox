@@ -1,0 +1,44 @@
+# Ignore backup files
+*.bak
+*~
+
+# Ignore log files
+*.log
+*.log.*
+
+# Ignore temporary files
+*.tmp
+*.temp
+
+# Ignore compiled binaries
+*.pyc
+*.pyo
+
+# Ignore OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Ignore editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Ignore cache directories
+cache/
+__pycache__/
+.pytest_cache/
+
+# Ignore local configuration overrides
+local/
+user/
+
+# Ignore generated files that shouldn't be committed
+menu.xml.generated
+themerc.local

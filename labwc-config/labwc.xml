@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<labwc>
+  <!-- Output configuration for dual monitors -->
+  <output name="card1-DP-1">
+    <mode width="1920" height="1080" refresh="60"/>
+    <scale>1</scale>
+    <transform>normal</transform>
+    <position x="0" y="0"/>
+  </output>
+  <output name="card1-HDMI-A-1">
+    <mode width="1920" height="1080" refresh="60"/>
+    <scale>1</scale>
+    <transform>normal</transform>
+    <position x="1920" y="0"/>
+  </output>
+
+  <core>
+    <decoration>server</decoration>
+  </core>
+
+  <windowRules>
+    <windowRule identifier="*">
+      <action name="SetDecorations" decorations="all"/>
+    </windowRule>
+  </windowRules>
+
+  <theme>
+    <name>RetroMinimal</name>
+    <layout>default</layout>
+    <title_layout>left</title_layout>
+    <font>Sans 7</font>
+    <button_layout>CM</button_layout>
+    <cornerRadius>0</cornerRadius>
+    <keepBorder>no</keepBorder>
+    <dropShadows>no</dropShadows>
+    <maximizedDecoration>none</maximizedDecoration>
+  </theme>
+
+  <!-- Right-click menu, now with logout option -->
+  <menu>
+    <item label="Terminal" action="Execute">
+      <command>alacritty</command>
+    </item>
+    <item label="Launcher" action="Execute">
+      <command>fuzzel</command>
+    </item>
+    <item label="File Manager" action="Execute">
+      <command>thunar</command>
+    </item>
+    <separator/>
+    <item label="Reload Config" action="Custom">
+      <command>labwcctl reload</command>
+    </item>
+    <item label="Logout" action="Exit"/>
+  </menu>
+
+  <keyboard>
+    <keybind key="W-Return">
+      <action name="Execute"><command>alacritty</command></action>
+    </keybind>
+    <keybind key="W-d">
+      <action name="Execute"><command>fuzzel</command></action>
+    </keybind>
+    <keybind key="W-q">
+      <action name="Close"/>
+    </keybind>
+    <keybind key="W-f">
+      <action name="ToggleFullscreen"/>
+    </keybind>
+    <keybind key="W-space">
+      <action name="ShowMenu"/>
+    </keybind>
+    <keybind key="W-Shift-c">
+      <action name="Custom"><command>labwcctl reload</command></action>
+    </keybind>
+    <keybind key="W-Shift-e">
+      <action name="Exit"/>
+    </keybind>
+    <keybind key="W-Shift-l">
+      <action name="Execute"><command>swaylock -f -c 000000</command></action>
+    </keybind>
+    <keybind key="Print">
+      <action name="Execute"><command>grimshot save area ~/Pictures/Screenshots/$(date +'%F-%T').png</command></action>
+    </keybind>
+    <keybind key="Shift-Print">
+      <action name="Execute"><command>grimshot copy area</command></action>
+    </keybind>
+  </keyboard>
+
+  <mouse>
+    <context name="frame">
+      <button button="Left" action="Move"/>
+      <button button="Right" action="Resize"/>
+      <button button="Middle" action="ShowMenu"/>
+    </context>
+    <context name="root">
+      <button button="Right" action="ShowMenu"/>
+    </context>
+  </mouse>
+
+  <autostart>
+    <command>waybar</command>
+    <command>dunst</command>
+    <command>wl-clipboard-history --daemon</command>
+    <command>fuzzel</command>
+    <command>~/.config/sway/scripts/autostart/autostart-conky.sh</command>
+    <command>~/.config/sway/scripts/hotplug.sh</command>
+  </autostart>
+
+  <window>
+    <focus_model>sloppy</focus_model>
+    <border>normal</border>
+    <border_width>1</border_width>
+    <titlebar>enabled</titlebar>
+    <resize>
+      <minimumArea>5</minimumArea>
+    </resize>
+  </window>
+</labwc>
