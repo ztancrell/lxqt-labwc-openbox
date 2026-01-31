@@ -32,6 +32,13 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
+if [ "${EUID:-$(id -u)}" -eq 0 ]; then
+    print_error "Do not run this installer as root (no sudo ./install.sh)."
+    print_error "Run it as your user so it installs into your HOME (~/.config, ~/.local)."
+    print_error "The script will prompt for sudo only if you choose the optional system-wide install."
+    exit 1
+fi
+
 # Check if we're in the right directory
 if [ ! -f "$SCRIPT_DIR/README.md" ]; then
     print_error "Please run this script from the lxqt-labwc-openbox repository root"
@@ -64,6 +71,17 @@ cp -r "$SCRIPT_DIR/labwc-config/"* "$CONFIG_DIR/labwc/"
 print_status "Installing LXQt configuration..."
 mkdir -p "$CONFIG_DIR/lxqt"
 cp -r "$SCRIPT_DIR/lxqt-config/"* "$CONFIG_DIR/lxqt/"
+
+# Install Openbox themes (used by Labwc theme name lookup)
+print_status "Installing Openbox themes..."
+THEMES_SRC="$SCRIPT_DIR/themes"
+THEMES_DEST="$HOME/.local/share/themes"
+if [ -d "$THEMES_SRC" ]; then
+    mkdir -p "$THEMES_DEST"
+    cp -r "$THEMES_SRC/"* "$THEMES_DEST/"
+else
+    print_warning "No themes/ directory found in repo; skipping theme install."
+fi
 
 # Set permissions
 print_status "Setting correct permissions..."
@@ -98,12 +116,6 @@ fi
 print_status "Generating application menu..."
 if [ -f "$CONFIG_DIR/labwc/menu-update.sh" ]; then
     "$CONFIG_DIR/labwc/menu-update.sh"
-fi
-
-# Set default theme (preserve user's preferred black and red theme)
-print_status "Setting default theme..."
-if [ -f "$CONFIG_DIR/labwc/set-default-theme.sh" ]; then
-    "$CONFIG_DIR/labwc/set-default-theme.sh"
 fi
 
 # Create desktop session file if needed

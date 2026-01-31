@@ -16,27 +16,43 @@
 
   <core>
     <decoration>server</decoration>
+    <maximizedDecoration>none</maximizedDecoration>
+    <gap>0</gap>
+    <adaptiveSync>no</adaptiveSync>
+    <allowTearing>no</allowTearing>
+    <autoEnableOutputs>yes</autoEnableOutputs>
+    <reuseOutputMode>no</reuseOutputMode>
+    <xwaylandPersistence>no</xwaylandPersistence>
+    <primarySelection>yes</primarySelection>
   </core>
+
+  <placement>
+    <policy>cascade</policy>
+  </placement>
 
   <windowRules>
     <windowRule identifier="*">
       <action name="SetDecorations" decorations="all"/>
     </windowRule>
+    <windowRule title="Attention">
+      <action name="ToggleAlwaysOnTop" />
+    </windowRule>
   </windowRules>
 
   <theme>
-    <name>RetroMinimal</name>
-    <layout>default</layout>
-    <title_layout>left</title_layout>
-    <font>Sans 7</font>
-    <button_layout>CM</button_layout>
+    <name>Vermello</name>
     <cornerRadius>0</cornerRadius>
     <keepBorder>no</keepBorder>
     <dropShadows>no</dropShadows>
     <maximizedDecoration>none</maximizedDecoration>
+    <titlebar>
+      <layout>icon:iconify,max,close</layout>
+    </titlebar>
+    <font place="ActiveWindow"><name>Sans</name><size>7</size></font>
+    <font place="InactiveWindow"><name>Sans</name><size>7</size></font>
   </theme>
 
-  <!-- Right-click menu, now with logout option -->
+  <!-- Right-click menu -->
   <menu>
     <item label="Terminal" action="Execute">
       <command>alacritty</command>
@@ -48,45 +64,118 @@
       <command>thunar</command>
     </item>
     <separator/>
+    <item label="Theme Switcher" action="Execute">
+      <command>~/.config/labwc/theme-switcher.sh</command>
+    </item>
     <item label="Reload Config" action="Custom">
       <command>labwcctl reload</command>
     </item>
     <item label="Logout" action="Exit"/>
   </menu>
 
+  <!-- Consolidated keyboard shortcuts -->
   <keyboard>
+    <!-- Terminal & Launcher -->
     <keybind key="W-Return">
       <action name="Execute"><command>alacritty</command></action>
     </keybind>
     <keybind key="W-d">
       <action name="Execute"><command>fuzzel</command></action>
     </keybind>
+    
+    <!-- Window Management -->
     <keybind key="W-q">
       <action name="Close"/>
     </keybind>
     <keybind key="W-f">
       <action name="ToggleFullscreen"/>
     </keybind>
+    <keybind key="F11">
+      <action name="ToggleFullscreen"/>
+    </keybind>
     <keybind key="W-space">
       <action name="ShowMenu"/>
     </keybind>
+    
+    <!-- Configuration -->
     <keybind key="W-Shift-c">
       <action name="Custom"><command>labwcctl reload</command></action>
+    </keybind>
+    <keybind key="W-c">
+      <action name="Reconfigure"/>
     </keybind>
     <keybind key="W-Shift-e">
       <action name="Exit"/>
     </keybind>
+    
+    <!-- Lock Screen -->
     <keybind key="W-Shift-l">
       <action name="Execute"><command>swaylock -f -c 000000</command></action>
     </keybind>
+    <keybind key="W-l">
+      <action name="Execute"><command>loginctl lock-session</command></action>
+    </keybind>
+    
+    <!-- Screenshots -->
     <keybind key="Print">
       <action name="Execute"><command>grimshot save area ~/Pictures/Screenshots/$(date +'%F-%T').png</command></action>
     </keybind>
     <keybind key="Shift-Print">
       <action name="Execute"><command>grimshot copy area</command></action>
     </keybind>
+    
+    <!-- Window Navigation -->
+    <keybind key="A-Tab">
+      <action name="NextWindow" />
+    </keybind>
+    <keybind key="A-S-Tab">
+      <action name="PreviousWindow" />
+    </keybind>
+    
+    <!-- Workspace Switching -->
+    <keybind key="W-1">
+      <action name="GoToDesktop" to="1" />
+    </keybind>
+    <keybind key="W-2">
+      <action name="GoToDesktop" to="2" />
+    </keybind>
+    <keybind key="W-3">
+      <action name="GoToDesktop" to="3" />
+    </keybind>
+    <keybind key="W-4">
+      <action name="GoToDesktop" to="4" />
+    </keybind>
+    
+    <!-- Move Windows to Workspaces -->
+    <keybind key="W-S-1">
+      <action name="SendToDesktop" to="1" />
+    </keybind>
+    <keybind key="W-S-2">
+      <action name="SendToDesktop" to="2" />
+    </keybind>
+    <keybind key="W-S-3">
+      <action name="SendToDesktop" to="3" />
+    </keybind>
+    <keybind key="W-S-4">
+      <action name="SendToDesktop" to="4" />
+    </keybind>
+    
+    <!-- Window Snapping -->
+    <keybind key="W-Left">
+      <action name="SnapToEdge" direction="left" />
+    </keybind>
+    <keybind key="W-Right">
+      <action name="SnapToEdge" direction="right" />
+    </keybind>
+    <keybind key="W-Up">
+      <action name="SnapToEdge" direction="up" />
+    </keybind>
+    <keybind key="W-Down">
+      <action name="SnapToEdge" direction="down" />
+    </keybind>
   </keyboard>
 
+  <!-- Mouse bindings -->
   <mouse>
     <context name="frame">
       <button button="Left" action="Move"/>
@@ -96,8 +185,55 @@
     <context name="root">
       <button button="Right" action="ShowMenu"/>
     </context>
+    <context name="Root">
+      <mousebind button="Right" action="Press">
+        <action name="ShowMenu" menu="root-menu" />
+      </mousebind>
+      <mousebind button="Left" action="Press">
+        <action name="None" />
+      </mousebind>
+    </context>
   </mouse>
 
+  <!-- Workspace configuration -->
+  <desktops number="4" />
+  <desktops>
+    <popupTime>1000</popupTime>
+    <names>
+      <name>1</name>
+      <name>2</name>
+      <name>3</name>
+      <name>4</name>
+    </names>
+  </desktops>
+
+  <!-- Input device configuration -->
+  <libinput>
+    <!-- TOUCHPAD: laptop trackpads -->
+    <device category="touchpad">
+      <pointerSpeed>0.3</pointerSpeed>
+      <accelProfile>adaptive</accelProfile>
+      <naturalScroll>no</naturalScroll>
+      <scrollFactor>0.3</scrollFactor>
+      <scrollMethod>twoFinger</scrollMethod>
+      <tap>yes</tap>
+      <tapButtonMap>lrm</tapButtonMap>
+      <tapAndDrag>yes</tapAndDrag>
+      <dragLock>no</dragLock>
+      <disableWhileTyping>yes</disableWhileTyping>
+      <clickMethod>buttonAreas</clickMethod>
+    </device>
+    <!-- NON-TOUCH: physical/external mice -->
+    <device category="non-touch">
+      <pointerSpeed>1.0</pointerSpeed>
+      <accelProfile>adaptive</accelProfile>
+      <naturalScroll>no</naturalScroll>
+      <scrollFactor>1.0</scrollFactor>
+      <leftHanded>no</leftHanded>
+    </device>
+  </libinput>
+
+  <!-- Autostart applications -->
   <autostart>
     <command>waybar</command>
     <command>dunst</command>
@@ -107,6 +243,7 @@
     <command>~/.config/sway/scripts/hotplug.sh</command>
   </autostart>
 
+  <!-- Window behavior -->
   <window>
     <focus_model>sloppy</focus_model>
     <border>normal</border>
