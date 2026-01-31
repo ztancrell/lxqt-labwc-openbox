@@ -38,7 +38,7 @@ window.label.text.justify: center
 window.active.label.bg: parentrelative
 window.active.label.text.color: #141c21
 window.inactive.label.bg: parentrelative
-window.inactive.label.text.color: #263640
+window.inactive.label.text.color: #a1a1a1
 
 !! window buttons
 window.*.button.*.bg: parentrelative
@@ -48,9 +48,9 @@ window.*.button.*.pressed.bg: flat
 window.active.button.*.hover.bg.color: #ea545c
 window.active.button.*.hover.image.color: #a1a1a1
 window.active.button.*.pressed.bg.color: #ea545c
-window.active.button.*.image.color: #ea545c
+window.active.button.*.image.color: #141c21
 window.active.button.disabled.image.color: #a1a1a1
-window.inactive.button.*.image.color: #263640
+window.inactive.button.*.image.color: #a1a1a1
 window.inactive.button.disabled.image.color: #a1a1a1
 
 !! borders
