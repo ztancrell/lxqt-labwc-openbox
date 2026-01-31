@@ -52,6 +52,11 @@
     <maximizedDecoration>titlebar</maximizedDecoration>
   </theme>
 
+  <!-- Theme file configuration -->
+  <themeFile>
+    <path>~/.config/labwc/themerc</path>
+  </themeFile>
+
   <!-- Right-click menu -->
   <menu>
     <item label="Terminal" action="Execute">

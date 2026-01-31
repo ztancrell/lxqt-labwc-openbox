@@ -100,6 +100,12 @@ if [ -f "$CONFIG_DIR/labwc/menu-update.sh" ]; then
     "$CONFIG_DIR/labwc/menu-update.sh"
 fi
 
+# Set default theme (preserve user's preferred black and red theme)
+print_status "Setting default theme..."
+if [ -f "$CONFIG_DIR/labwc/set-default-theme.sh" ]; then
+    "$CONFIG_DIR/labwc/set-default-theme.sh"
+fi
+
 # Create desktop session file if needed
 SESSION_DIR="/usr/share/xsessions"
 if [ -d "$SESSION_DIR" ] && [ ! -f "$SESSION_DIR/lxqt-labwc.desktop" ]; then
