@@ -68,7 +68,8 @@ cp -r "$SCRIPT_DIR/lxqt-config/"* "$CONFIG_DIR/lxqt/"
 # Set permissions
 print_status "Setting correct permissions..."
 chmod +x "$CONFIG_DIR/labwc"/*.sh
-chmod +x "$CONFIG_DIR/labwc/menu-generator.*"
+chmod +x "$CONFIG_DIR/labwc/menu-generator.py"
+chmod +x "$CONFIG_DIR/labwc/menu-generator.sh"
 chmod +x "$CONFIG_DIR/labwc/idle"/*.sh
 
 # Create symlinks for consolidated config
