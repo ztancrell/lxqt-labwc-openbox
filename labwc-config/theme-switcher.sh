@@ -3,73 +3,110 @@
 # Labwc Theme Switcher
 # Usage: ./theme-switcher.sh [theme-name]
 
-THEME_DIR="$HOME/.config/labwc/colors"
-THEME_FILE="$HOME/.config/labwc/themerc"
-BACKUP_FILE="$HOME/.config/labwc/themerc.backup"
+CONFIG_DIR="$HOME/.config/labwc"
+LABWC_XML="$CONFIG_DIR/labwc.xml"
+RC_XML="$CONFIG_DIR/rc.xml"
+BACKUP_DIR="$CONFIG_DIR/theme-switcher-backup"
 
-# Available themes
-THEMES=(
-    "nord"
-    "dracula" 
-    "catppuccin"
-    "gruvbox"
-    "solarized-dark"
-    "tokyonight"
-    "onedark"
-    "everforest"
-    "wallpaper"
-    "black"
-    "adapta"
-    "arc"
-    "cyberpunk"
-    "lavender-pastel"
-    "lovelace"
-    "navy"
-    "paper"
-    "solarized"
-    "yousai"
-    "everforest-light"
-)
+get_available_themes() {
+    local themes=()
+    local dir
+    for dir in "$HOME/.local/share/themes" "/usr/share/themes"; do
+        [ -d "$dir" ] || continue
+        while IFS= read -r -d '' themerc; do
+            themes+=("$(basename "$(dirname "$(dirname "$themerc")")")")
+        done < <(find "$dir" -maxdepth 3 -type f -path '*/openbox-3/themerc' -print0 2>/dev/null)
+    done
+    printf '%s\n' "${themes[@]}" | awk 'NF' | sort -fu
+}
 
 show_usage() {
     echo "Labwc Theme Switcher"
     echo "Usage: $0 [theme-name]"
     echo ""
     echo "Available themes:"
-    for theme in "${THEMES[@]}"; do
-        echo "  - $theme"
-    done
+    get_available_themes | sed 's/^/  - /'
     echo ""
     echo "Examples:"
-    echo "  $0 nord"
-    echo "  $0 dracula"
-    echo "  $0 catppuccin"
+    echo "  $0 Vermello"
 }
 
-backup_current_theme() {
-    if [ -f "$THEME_FILE" ]; then
-        cp "$THEME_FILE" "$BACKUP_FILE"
-        echo "Current theme backed up to $BACKUP_FILE"
+backup_configs() {
+    mkdir -p "$BACKUP_DIR"
+    if [ -f "$LABWC_XML" ]; then
+        cp "$LABWC_XML" "$BACKUP_DIR/labwc.xml.backup"
+    fi
+    if [ -f "$RC_XML" ]; then
+        cp "$RC_XML" "$BACKUP_DIR/rc.xml.backup"
     fi
 }
 
 apply_theme() {
     local theme_name="$1"
-    local theme_path="$THEME_DIR/${theme_name}.color"
-    
-    if [ ! -f "$theme_path" ]; then
-        echo "Error: Theme '$theme_name' not found at $theme_path"
+    if ! get_available_themes | grep -Fxq "$theme_name"; then
+        echo "Error: Theme '$theme_name' not found."
         echo "Available themes:"
-        ls -1 "$THEME_DIR"/*.color | sed 's|.*/||' | sed 's|\.color||'
+        get_available_themes
         exit 1
     fi
-    
-    backup_current_theme
-    
-    # Copy theme to themerc
-    cp "$theme_path" "$THEME_FILE"
-    
-    # Reload labwc configuration
+
+    backup_configs
+
+    if command -v python3 >/dev/null 2>&1; then
+        python3 - "$LABWC_XML" "$theme_name" <<'PY'
+import re
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+theme_name = sys.argv[2]
+if not path.exists():
+    raise SystemExit(0)
+
+s = path.read_text(encoding="utf-8", errors="replace")
+
+pattern = re.compile(r"(<theme\b[^>]*>.*?<name>)(.*?)(</name>)", re.S)
+if pattern.search(s):
+    s = pattern.sub(r"\\1" + theme_name + r"\\3", s, count=1)
+else:
+    theme_open = re.compile(r"<theme\b[^>]*>")
+    if theme_open.search(s):
+        s = theme_open.sub(lambda m: m.group(0) + "\n    <name>" + theme_name + "</name>", s, count=1)
+    else:
+        root_open = re.compile(r"<labwc\b[^>]*>")
+        if root_open.search(s):
+            s = root_open.sub(lambda m: m.group(0) + "\n  <theme>\n    <name>" + theme_name + "</name>\n  </theme>", s, count=1)
+
+path.write_text(s, encoding="utf-8")
+PY
+
+        python3 - "$RC_XML" "$theme_name" <<'PY'
+import re
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+theme_name = sys.argv[2]
+if not path.exists():
+    raise SystemExit(0)
+
+s = path.read_text(encoding="utf-8", errors="replace")
+
+pattern = re.compile(r"(<theme\b[^>]*>.*?<name>)(.*?)(</name>)", re.S)
+if pattern.search(s):
+    s = pattern.sub(r"\\1" + theme_name + r"\\3", s, count=1)
+else:
+    theme_open = re.compile(r"<theme\b[^>]*>")
+    if theme_open.search(s):
+        s = theme_open.sub(lambda m: m.group(0) + "\n\t<name>" + theme_name + "</name>", s, count=1)
+
+path.write_text(s, encoding="utf-8")
+PY
+    else
+        echo "Error: python3 is required to switch themes."
+        exit 1
+    fi
+
     if command -v labwcctl >/dev/null 2>&1; then
         labwcctl reload
         echo "Theme '$theme_name' applied and Labwc reloaded"
@@ -80,24 +117,17 @@ apply_theme() {
 
 list_themes() {
     echo "Available themes:"
-    for theme in "${THEMES[@]}"; do
-        local theme_path="$THEME_DIR/${theme}.color"
-        if [ -f "$theme_path" ]; then
-            echo "  ✓ $theme"
-        else
-            echo "  ✗ $theme (file missing)"
-        fi
-    done
+    get_available_themes
 }
 
 interactive_mode() {
     echo "Labwc Theme Switcher - Interactive Mode"
     echo "======================================"
     echo ""
-    
+
     list_themes
     echo ""
-    
+
     read -p "Enter theme name (or 'q' to quit): " selected_theme
     
     if [[ "$selected_theme" == "q" || "$selected_theme" == "quit" ]]; then
@@ -105,22 +135,7 @@ interactive_mode() {
         exit 0
     fi
     
-    # Check if theme exists
-    local theme_found=false
-    for theme in "${THEMES[@]}"; do
-        if [[ "$theme" == "$selected_theme" ]]; then
-            theme_found=true
-            break
-        fi
-    done
-    
-    if [ "$theme_found" = true ]; then
-        apply_theme "$selected_theme"
-    else
-        echo "Error: Unknown theme '$selected_theme'"
-        echo "Use '$0 --list' to see available themes."
-        exit 1
-    fi
+    apply_theme "$selected_theme"
 }
 
 # Main script logic
@@ -138,9 +153,16 @@ case "${1:-}" in
         exit 0
         ;;
     --restore|-r)
-        if [ -f "$BACKUP_FILE" ]; then
-            cp "$BACKUP_FILE" "$THEME_FILE"
-            labwcctl reload 2>/dev/null || echo "Restart Labwc to see changes"
+        if [ -f "$BACKUP_DIR/labwc.xml.backup" ] || [ -f "$BACKUP_DIR/rc.xml.backup" ]; then
+            if [ -f "$BACKUP_DIR/labwc.xml.backup" ]; then
+                cp "$BACKUP_DIR/labwc.xml.backup" "$LABWC_XML"
+            fi
+            if [ -f "$BACKUP_DIR/rc.xml.backup" ]; then
+                cp "$BACKUP_DIR/rc.xml.backup" "$RC_XML"
+            fi
+            if command -v labwcctl >/dev/null 2>&1; then
+                labwcctl reload 2>/dev/null || echo "Restart Labwc to see changes"
+            fi
             echo "Previous theme restored"
         else
             echo "No backup theme found"

@@ -72,6 +72,8 @@ print_status "Installing LXQt configuration..."
 mkdir -p "$CONFIG_DIR/lxqt"
 cp -r "$SCRIPT_DIR/lxqt-config/"* "$CONFIG_DIR/lxqt/"
 
+rm -f "$CONFIG_DIR/labwc/themerc-override"
+
 # Install Openbox themes (used by Labwc theme name lookup)
 print_status "Installing Openbox themes..."
 THEMES_SRC="$SCRIPT_DIR/themes"
@@ -89,18 +91,6 @@ chmod +x "$CONFIG_DIR/labwc"/*.sh
 chmod +x "$CONFIG_DIR/labwc/menu-generator.py"
 chmod +x "$CONFIG_DIR/labwc/menu-generator.sh"
 chmod +x "$CONFIG_DIR/labwc/idle"/*.sh
-
-# Create symlinks for consolidated config
-if [ -f "$CONFIG_DIR/labwc/labwc-consolidated.xml" ]; then
-    print_status "Setting up consolidated configuration..."
-    # Backup original configs
-    mv "$CONFIG_DIR/labwc/labwc.xml" "$CONFIG_DIR/labwc/labwc.xml.backup" 2>/dev/null || true
-    mv "$CONFIG_DIR/labwc/rc.xml" "$CONFIG_DIR/labwc/rc.xml.backup" 2>/dev/null || true
-    
-    # Use consolidated config
-    cp "$CONFIG_DIR/labwc/labwc-consolidated.xml" "$CONFIG_DIR/labwc/labwc.xml"
-    cp "$CONFIG_DIR/labwc/labwc-consolidated.xml" "$CONFIG_DIR/labwc/rc.xml"
-fi
 
 # Install theme switcher system-wide if desired
 read -p "Do you want to install theme switcher system-wide? (y/N): " -n 1 -r

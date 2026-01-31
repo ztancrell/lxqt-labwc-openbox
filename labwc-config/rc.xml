@@ -2,7 +2,7 @@
 <labwc_config>
     <core>
         <decoration>server</decoration>
-        <maximizedDecoration>titlebar</maximizedDecoration>
+        <maximizedDecoration>none</maximizedDecoration>
         <gap>0</gap>
         <adaptiveSync>no</adaptiveSync>
         <allowTearing>no</allowTearing>
@@ -19,7 +19,7 @@
     <dropShadowsOnTiled>no</dropShadowsOnTiled>
     <theme>
   	<name>Vermello</name>
-	<cornerRadius>8</cornerRadius>
+	<cornerRadius>0</cornerRadius>
     </theme>
 
     <!-- Key bindings -->
