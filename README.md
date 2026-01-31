@@ -9,30 +9,47 @@ This repository provides configuration files to create a lightweight, Openbox-st
 - **Labwc** - Wayland compositor inspired by Openbox
 - **Openbox styling** - Classic look and feel with modern Wayland support
 
-## Features
+## New Features (Updated)
 
-- Openbox-style window decorations and themes
-- Lightweight and fast performance
-- Wayland support with modern compositing
-- Custom menu system with dynamic generation
-- Panel and desktop configuration
-- Autostart applications management
-- Theme customization scripts
+### Theme System
+- **20+ Color Schemes**: Nord, Dracula, Catppuccin, Gruvbox, Tokyo Night, and more
+- **Theme Switcher**: Easy command-line theme switching with `theme-switcher.sh`
+- **Dynamic Theming**: Instant theme changes without restart
 
-## Installation
+### Consolidated Configuration
+- **Unified Config**: Single `labwc-consolidated.xml` replaces conflicting configs
+- **Consistent Keybindings**: Standardized shortcuts across all applications
+- **Resolved Conflicts**: Fixed theme and keybinding inconsistencies
 
-### Prerequisites
+### Enhanced Menu System
+- **Dynamic Generation**: Automatic application menu updates
+- **Clean Interface**: Streamlined menu without footer clutter
+- **Easy Updates**: One-command menu regeneration
 
-Ensure you have the following packages installed:
+### Installation Tools
+- **Automated Installer**: `install.sh` handles everything automatically
+- **Safe Backups**: Automatic backup of existing configurations
+- **Session Integration**: Creates desktop session entries
+
+## Quick Start
+
+### Automated Installation (Recommended)
+
 ```bash
-# Arch Linux
-sudo pacman -S lxqt labwc
-
-# Debian/Ubuntu
-sudo apt install lxqt labwc
+# Clone and install
+git clone <repository-url>
+cd lxqt-labwc-openbox
+./install.sh
 ```
 
-### Setup
+The installer will:
+- Backup your existing configurations
+- Install all configuration files
+- Set up proper permissions
+- Generate initial application menu
+- Create desktop session entry
+
+### Manual Installation
 
 1. Clone this repository:
 ```bash
@@ -59,23 +76,20 @@ chmod +x ~/.config/labwc/*.sh
 chmod +x ~/.config/labwc/menu-generator.*
 ```
 
-4. Set up the session:
-```bash
-# Copy session files if needed
-cp labwc-config/xinitrc ~/.xinitrc
-```
-
 ## Configuration Files
 
 ### Labwc Configuration (`labwc-config/`)
 
-- `labwc.xml` - Main Labwc configuration
-- `rc.xml` - Window manager settings and keybindings
+- `labwc-consolidated.xml` - **NEW**: Unified configuration file
+- `labwc.xml` - Main Labwc configuration (now uses consolidated config)
+- `rc.xml` - Window manager settings (now uses consolidated config)
 - `menu.xml` - Application menu configuration
 - `themerc` - Theme configuration
 - `themerc-override` - Theme customizations
 - `autostart` - Applications to launch on startup
-- `environment` - Environment variables
+- `theme-switcher.sh` - **NEW**: Theme switching utility
+- `menu-update.sh` - **NEW**: Simple menu update utility
+- `colors/` - **NEW**: 20+ pre-made color schemes
 - `*.xbm` - Window button bitmaps
 - `menu-generator.*` - Dynamic menu generation scripts
 
@@ -132,18 +146,58 @@ Edit `lxqt-config/panel.conf` to customize the LXQt panel layout and applets.
    startx ~/.xinitrc
    ```
 
-### Menu Generation
+### Theme Management
 
-To regenerate the application menu:
+#### Interactive Theme Switching
+```bash
+~/.config/labwc/theme-switcher.sh --interactive
+```
+
+#### Command Line Theme Switching
+```bash
+# Switch to specific theme
+~/.config/labwc/theme-switcher.sh nord
+~/.config/labwc/theme-switcher.sh dracula
+~/.config/labwc/theme-switcher.sh catppuccin
+
+# List available themes
+~/.config/labwc/theme-switcher.sh --list
+
+# Restore previous theme
+~/.config/labwc/theme-switcher.sh --restore
+```
+
+#### System-wide Theme Switching (if installed)
+```bash
+labwc-theme nord
+labwc-theme --list
+```
+
+### Menu Management
+
+#### Update Application Menu
+```bash
+~/.config/labwc/menu-update.sh
+```
+
+#### Advanced Menu Generation (with rofi)
 ```bash
 ~/.config/labwc/menu-generator.sh
 ```
 
-### Theme Switching
+### Configuration Management
 
-To apply theme changes:
+#### Reload Configuration
 ```bash
-~/.config/labwc/setup-theme.sh
+# Reload Labwc settings
+labwcctl reload
+
+# Or use keybinding: W-Shift-c
+```
+
+#### View Available Themes
+```bash
+ls ~/.config/labwc/colors/*.color | sed 's|.*/||' | sed 's|\.color||'
 ```
 
 ## Troubleshooting
