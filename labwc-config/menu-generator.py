@@ -295,65 +295,99 @@ addIconsToList(iconList, selected_theme)
 categoryDict = {}
 
 def print_custom_footer(handle, is_static):
-	# Define custom items: [Label, ActionName, Command, PossibleIcons]
-	# Change this according to you
-	footer_items = [
+	# Quick launch items at top level
+	quick_items = [
 		{
 			"label": "Terminal", 
 			"action": "Execute", 
-			"cmd": "foot", 
-			"icons": ["terminal", "x-terminal-emulator", "org.gnome.Terminal"]
+			"cmd": "alacritty", 
+			"icons": ["utilities-terminal", "terminal", "org.gnome.Terminal"]
 		},
+		{
+			"label": "File Manager", 
+			"action": "Execute", 
+			"cmd": "pcmanfm-qt", 
+			"icons": ["system-file-manager", "folder", "org.gnome.Files"]
+		},
+		{
+			"label": "Web Browser", 
+			"action": "Execute", 
+			"cmd": "firefox", 
+			"icons": ["firefox", "web-browser", "internet-web-browser"]
+		},
+	]
+	
+	# System submenu items (Openbox-style)
+	system_items = [
+		{
+			"label": "Lock Screen", 
+			"action": "Execute", 
+			"cmd": "loginctl lock-session", 
+			"icons": ["system-lock-screen", "lock", "preferences-desktop-screensaver"]
+		},
+		{
+			"label": "Suspend", 
+			"action": "Execute", 
+			"cmd": "systemctl suspend", 
+			"icons": ["system-suspend", "sleep", "gnome-session-suspend"]
+		},
+		{
+			"label": "Hibernate", 
+			"action": "Execute", 
+			"cmd": "systemctl hibernate", 
+			"icons": ["system-hibernate", "gnome-session-hibernate"]
+		},
+		{"separator": True},
 		{
 			"label": "Reconfigure", 
 			"action": "Reconfigure", 
 			"cmd": None, 
-			"icons": ["system-reboot", "view-refresh", "reload"]
+			"icons": ["view-refresh", "reload", "system-reboot"]
 		},
+		{"separator": True},
 		{
-			"label": "Proton VPN", 
-			"action": "Execute", 
-			"cmd": "protonvpn-app", 
-			"icons": ["proton-vpn-logo", "network-vpn", "nm-vpn-standalone-lock"]
-		},
-		{
-			"label": "Background", 
-			"action": "Execute", 
-			"cmd": f"sh -c '{userhome}/.config/rofi/wallselect/wallselect.sh'",
-			"icons": ["preferences-desktop-wallpaper", "wallpaper", "background"]
-		},
-		{
-			"label": "Exit", 
+			"label": "Log Out", 
 			"action": "Exit", 
 			"cmd": None, 
-			"icons": ["system-log-out", "gnome-logout"]
-		}
+			"icons": ["system-log-out", "gnome-logout", "exit"]
+		},
+		{
+			"label": "Reboot", 
+			"action": "Execute", 
+			"cmd": "systemctl reboot", 
+			"icons": ["system-reboot", "view-refresh", "gnome-session-reboot"]
+		},
+		{
+			"label": "Shutdown", 
+			"action": "Execute", 
+			"cmd": "systemctl poweroff", 
+			"icons": ["system-shutdown", "gnome-shutdown", "power-off"]
+		},
 	]
 
-	# Print Separator
-	if is_static:
-		handle.write('        <separator />\n')
-	else:
-		print("<separator />")
-
-	# Print Items
-	for item in footer_items:
+	def write_item(item, indent="        "):
+		if item.get("separator"):
+			if is_static:
+				handle.write(f'{indent}<separator />\n')
+			else:
+				print("<separator />")
+			return
+		
 		iconPath = find_best_icon(item["icons"])
 		
 		if is_static:
-			handle.write(f'        <item label="{item["label"]}"')
+			handle.write(f'{indent}<item label="{item["label"]}"')
 			if iconPath:
 				handle.write(f' icon="{iconPath}"')
 			handle.write('>\n')
 			
-			handle.write(f'            <action name="{item["action"]}">\n')
+			handle.write(f'{indent}    <action name="{item["action"]}">\n')
 			if item["cmd"]:
 				escaped_cmd = xescape(item["cmd"])
-				handle.write(f'                <command>{escaped_cmd}</command>\n')
-			handle.write('            </action>\n')
-			handle.write('        </item>\n')
+				handle.write(f'{indent}        <command>{escaped_cmd}</command>\n')
+			handle.write(f'{indent}    </action>\n')
+			handle.write(f'{indent}</item>\n')
 		else:
-			# Pipe menu format
 			out = f'<item label="{item["label"]}"'
 			if iconPath:
 				out += f' icon="{iconPath}"'
@@ -362,6 +396,36 @@ def print_custom_footer(handle, is_static):
 				out += f'<command><![CDATA[{item["cmd"]}]]></command>'
 			out += '</action></item>'
 			print(out)
+
+	# Print Separator before footer
+	if is_static:
+		handle.write('        <separator />\n')
+	else:
+		print("<separator />")
+
+	# Print quick launch items
+	for item in quick_items:
+		write_item(item)
+
+	# Print System submenu
+	systemIcon = find_best_icon(["preferences-system", "system", "applications-system"])
+	if is_static:
+		handle.write('        <menu id="system-menu" label="System"')
+		if systemIcon:
+			handle.write(f' icon="{systemIcon}"')
+		handle.write('>\n')
+		for item in system_items:
+			write_item(item, "            ")
+		handle.write('        </menu>\n')
+	else:
+		sysMenuStr = '<menu id="system-menu" label="System"'
+		if systemIcon:
+			sysMenuStr += f' icon="{systemIcon}"'
+		sysMenuStr += '>'
+		print(sysMenuStr)
+		for item in system_items:
+			write_item(item, "")
+		print('</menu>')
 
 
 if __name__ == "__main__":
