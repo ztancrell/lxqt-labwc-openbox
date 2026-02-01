@@ -93,6 +93,14 @@ print_status "Installing portal configuration..."
 mkdir -p "$CONFIG_DIR/xdg-desktop-portal"
 cp "$CONFIG_DIR/labwc/xdg-desktop-portal-portals.conf" "$CONFIG_DIR/xdg-desktop-portal/portals.conf"
 
+# Install systemd timer for periodic menu updates
+print_status "Installing menu update timer..."
+mkdir -p "$CONFIG_DIR/systemd/user"
+cp "$CONFIG_DIR/labwc/systemd/labwc-menu-update.service" "$CONFIG_DIR/systemd/user/"
+cp "$CONFIG_DIR/labwc/systemd/labwc-menu-update.timer" "$CONFIG_DIR/systemd/user/"
+systemctl --user daemon-reload
+systemctl --user enable --now labwc-menu-update.timer
+
 # Install Openbox themes (used by Labwc theme name lookup)
 print_status "Installing Openbox themes..."
 THEMES_SRC="$SCRIPT_DIR/themes"
