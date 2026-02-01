@@ -26,9 +26,9 @@ if python3 "$MENU_GENERATOR" --no-icons -o "$MENU_FILE"; then
         echo "Restart Labwc to see menu changes"
     fi
     
-    # Send notification if available
-    if command -v notify-send >/dev/null 2>&1; then
-        notify-send "Labwc Menu" "Application menu updated"
+    # Log to systemd journal
+    if command -v logger >/dev/null 2>&1; then
+        logger -t labwc-menu "Application menu updated successfully"
     fi
 else
     echo "Error: Failed to generate menu"
