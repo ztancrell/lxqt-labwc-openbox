@@ -92,16 +92,6 @@ chmod +x "$CONFIG_DIR/labwc/menu-generator.py"
 chmod +x "$CONFIG_DIR/labwc/menu-generator.sh"
 chmod +x "$CONFIG_DIR/labwc/idle"/*.sh
 
-# Install theme switcher system-wide if desired
-read -p "Do you want to install theme switcher system-wide? (y/N): " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    print_status "Installing theme switcher system-wide..."
-    sudo cp "$CONFIG_DIR/labwc/theme-switcher.sh" "/usr/local/bin/labwc-theme"
-    sudo chmod +x "/usr/local/bin/labwc-theme"
-    print_success "Theme switcher installed as 'labwc-theme' command"
-fi
-
 # Generate initial menu
 print_status "Generating application menu..."
 if [ -f "$CONFIG_DIR/labwc/menu-update.sh" ]; then
@@ -139,7 +129,7 @@ echo ""
 print_status "Next steps:"
 echo "  1. Restart your display manager or logout/login"
 echo "  2. Select 'LXQt' session from your display manager"
-echo "  3. Use 'labwc-theme' or '~/.config/labwc/theme-switcher.sh' to switch themes"
+echo "  3. Use '~/.config/labwc/theme-switcher.sh' to switch themes"
 echo "  4. Use '~/.config/labwc/menu-update.sh' to update application menu"
 echo ""
 print_warning "If you encounter issues, restore from backup:"
