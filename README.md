@@ -25,8 +25,14 @@ This repository provides a complete configuration for a lightweight Wayland desk
 ### Openbox-Style Menu
 - **App categories** - Editors, Games, Graphics, Internet, Multimedia, Office, Settings, System, Utilities
 - **Quick launch** - Terminal, File Manager, Web Browser at top level
+- **Config submenu** - Reconfigure Labwc, Update Menu, Sync GTK Theme, Restart Portals, Edit configs
 - **Session submenu** - Lock, Suspend, Hibernate, Log Out, Reboot, Shutdown
-- **No icons** - Clean text-only menu with subtle border
+
+### Systemd Integration
+- **Menu updates** - Automatic periodic menu regeneration (every 30 min)
+- **GTK sync** - Applies GTK dark theme on login
+- **Portal restart** - Ensures file dialogs work correctly
+- **Theme watcher** - Auto-reconfigures Labwc when theme files change
 
 ### Installation
 - **Automated installer** - `install.sh` handles everything
@@ -140,11 +146,10 @@ Edit `labwc-config/labwc.xml` under `<keyboard>` section. Default bindings:
 
 ### Common Tasks
 
-```bash
-# Update application menu
-~/.config/labwc/menu-update.sh
+Menu updates happen automatically via systemd timer. For manual actions, use the **Config** submenu from right-click menu, or:
 
-# Reload Labwc config (or use Super+Shift+C)
+```bash
+# Reload Labwc config
 labwc --reconfigure
 ```
 
@@ -158,7 +163,7 @@ labwc --reconfigure
 
 2. **Right-click menu not showing** - pcmanfm-qt is capturing desktop. The autostart kills it automatically.
 
-3. **Menu not updating** - Run `~/.config/labwc/menu-update.sh`
+3. **Menu not updating** - Use Config → Update Menu, or run `~/.config/labwc/menu-update.sh`
 
 4. **Double panel** - LXQt starts its own panel; don't add lxqt-panel to autostart.
 
