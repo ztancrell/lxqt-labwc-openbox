@@ -89,11 +89,17 @@
       <action name="Execute"><command>loginctl lock-session</command></action>
     </keybind>
     
-    <!-- Screenshots -->
+    <!-- Screenshots (Print key + RK61-friendly alternatives) -->
     <keybind key="Print">
       <action name="Execute"><command>grimshot save area ~/Pictures/Screenshots/$(date +'%F-%T').png</command></action>
     </keybind>
     <keybind key="Shift-Print">
+      <action name="Execute"><command>grimshot copy area</command></action>
+    </keybind>
+    <keybind key="W-s">
+      <action name="Execute"><command>grimshot save area ~/Pictures/Screenshots/$(date +'%F-%T').png</command></action>
+    </keybind>
+    <keybind key="W-S-s">
       <action name="Execute"><command>grimshot copy area</command></action>
     </keybind>
     
@@ -133,7 +139,7 @@
       <action name="SendToDesktop" to="4" />
     </keybind>
     
-    <!-- Window Snapping -->
+    <!-- Window Snapping (arrows + RK61-friendly HJKL vim-style) -->
     <keybind key="W-Left">
       <action name="SnapToEdge" direction="left" />
     </keybind>
@@ -145,6 +151,41 @@
     </keybind>
     <keybind key="W-Down">
       <action name="SnapToEdge" direction="down" />
+    </keybind>
+    <keybind key="W-h">
+      <action name="SnapToEdge" direction="left" />
+    </keybind>
+    <keybind key="W-j">
+      <action name="SnapToEdge" direction="down" />
+    </keybind>
+    <keybind key="W-k">
+      <action name="SnapToEdge" direction="up" />
+    </keybind>
+    <!-- W-l is lock screen, use W-; for right snap -->
+    <keybind key="W-semicolon">
+      <action name="SnapToEdge" direction="right" />
+    </keybind>
+    
+    <!-- RK61 Fullscreen alternative (F11 needs Fn key) -->
+    <keybind key="W-m">
+      <action name="ToggleMaximize"/>
+    </keybind>
+    
+    <!-- Media Keys (RK61 Fn layer) -->
+    <keybind key="XF86AudioRaiseVolume">
+      <action name="Execute"><command>wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+</command></action>
+    </keybind>
+    <keybind key="XF86AudioLowerVolume">
+      <action name="Execute"><command>wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-</command></action>
+    </keybind>
+    <keybind key="XF86AudioMute">
+      <action name="Execute"><command>wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle</command></action>
+    </keybind>
+    <keybind key="XF86MonBrightnessUp">
+      <action name="Execute"><command>brightnessctl set +5%</command></action>
+    </keybind>
+    <keybind key="XF86MonBrightnessDown">
+      <action name="Execute"><command>brightnessctl set 5%-</command></action>
     </keybind>
   </keyboard>
 
