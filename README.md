@@ -157,15 +157,9 @@ labwc --reconfigure
 
 ### Common Issues
 
-1. **White titlebar on some apps** - App is using client-side decorations (CSD). Add to app config:
-   - Alacritty: `window.decorations: none` in `~/.config/alacritty/alacritty.yml`
-   - GTK apps: Set `GTK_CSD=0` in environment
+1. **White titlebar on some apps** - App is using client-side decorations (CSD). Most Qt/GTK apps respect server-side decorations automatically.
 
-2. **Right-click menu not showing** - pcmanfm-qt is capturing desktop. The autostart kills it automatically.
-
-3. **Menu not updating** - Use Config → Update Menu, or run `~/.config/labwc/menu-update.sh`
-
-4. **Double panel** - LXQt starts its own panel; don't add lxqt-panel to autostart.
+2. **Right-click menu not showing** - pcmanfm-qt may be capturing the desktop. The autostart handles this automatically.
 
 ## File Structure
 
