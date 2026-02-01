@@ -55,9 +55,6 @@
     <keybind key="W-Return">
       <action name="Execute"><command>alacritty</command></action>
     </keybind>
-    <keybind key="W-d">
-      <action name="Execute"><command>fuzzel</command></action>
-    </keybind>
     
     <!-- Window Management -->
     <keybind key="W-q">
@@ -172,8 +169,7 @@
   </mouse>
 
   <!-- Workspace configuration -->
-  <desktops number="4" />
-  <desktops>
+  <desktops number="4">
     <popupTime>1000</popupTime>
     <names>
       <name>1</name>
@@ -208,16 +204,6 @@
       <leftHanded>no</leftHanded>
     </device>
   </libinput>
-
-  <!-- Autostart applications -->
-  <autostart>
-    <command>waybar</command>
-    <command>dunst</command>
-    <command>wl-clipboard-history --daemon</command>
-    <command>fuzzel</command>
-    <command>~/.config/sway/scripts/autostart/autostart-conky.sh</command>
-    <command>~/.config/sway/scripts/hotplug.sh</command>
-  </autostart>
 
   <!-- Window behavior -->
   <window>

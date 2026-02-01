@@ -42,3 +42,4 @@ user/
 # Ignore generated files that shouldn't be committed
 menu.xml.generated
 themerc.local
+labwc-config/menu.xml

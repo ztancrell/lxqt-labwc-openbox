@@ -39,6 +39,35 @@ if [ "${EUID:-$(id -u)}" -eq 0 ]; then
     exit 1
 fi
 
+# Check for required dependencies
+check_dependencies() {
+    local missing=()
+    local required=(labwc python3 swaybg swayidle swaylock dunst brightnessctl lxqt-panel)
+    local optional=(grimshot wl-clip-persist cliphist paplay)
+    
+    print_status "Checking dependencies..."
+    for cmd in "${required[@]}"; do
+        if ! command -v "$cmd" &>/dev/null; then
+            missing+=("$cmd")
+        fi
+    done
+    
+    if [ ${#missing[@]} -gt 0 ]; then
+        print_error "Missing required dependencies: ${missing[*]}"
+        print_status "Install them with your package manager before continuing."
+        exit 1
+    fi
+    
+    for cmd in "${optional[@]}"; do
+        if ! command -v "$cmd" &>/dev/null; then
+            print_warning "Optional: $cmd not found (some features may not work)"
+        fi
+    done
+    print_success "All required dependencies found"
+}
+
+check_dependencies
+
 # Check if we're in the right directory
 if [ ! -f "$SCRIPT_DIR/README.md" ]; then
     print_error "Please run this script from the lxqt-labwc-openbox repository root"
@@ -94,7 +123,9 @@ ln -sfn "$CONFIG_DIR/labwc" "$CONFIG_DIR/lxqt/labwc"
 # Install GTK dark theme settings
 print_status "Installing GTK dark theme..."
 mkdir -p "$CONFIG_DIR/gtk-3.0"
+mkdir -p "$CONFIG_DIR/gtk-4.0"
 cp "$CONFIG_DIR/labwc/templates/gtk-3.0-settings.ini" "$CONFIG_DIR/gtk-3.0/settings.ini"
+cp "$CONFIG_DIR/labwc/templates/gtk-4.0-settings.css" "$CONFIG_DIR/gtk-4.0/gtk.css"
 
 # Install xdg-desktop-portal config (fixes file picker on Wayland)
 print_status "Installing portal configuration..."
