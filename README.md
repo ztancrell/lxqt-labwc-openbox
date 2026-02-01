@@ -169,9 +169,10 @@ lxqt-labwc-openbox/
 ├── labwc-config/          # Labwc compositor configs
 │   ├── labwc.xml          # Main config (theme, keybinds, menu)
 │   ├── autostart          # Startup apps
-│   ├── menu-generator.py  # Menu generator
-│   ├── menu-update.sh     # Regenerate menu
-│   └── labwc-autostart.desktop  # XDG autostart for LXQt
+│   ├── menu-generator.py  # Dynamic menu generator
+│   ├── menu-update.sh     # Regenerate menu script
+│   ├── gtk.sh             # GTK theme sync script
+│   └── systemd/           # User services (menu timer, theme watcher, etc.)
 ├── lxqt-config/           # LXQt panel/session configs
 │   ├── panel.conf         # Minimal taskbar
 │   └── session.conf       # Session settings

@@ -128,39 +128,26 @@ if [ -f "$CONFIG_DIR/labwc/menu-update.sh" ]; then
     "$CONFIG_DIR/labwc/menu-update.sh"
 fi
 
-# Create desktop session file if needed
-SESSION_DIR="/usr/share/xsessions"
-if [ -d "$SESSION_DIR" ] && [ ! -f "$SESSION_DIR/lxqt-labwc.desktop" ]; then
-    print_status "Creating desktop session file..."
-    if command -v sudo >/dev/null 2>&1; then
-        sudo tee "$SESSION_DIR/lxqt-labwc.desktop" > /dev/null <<EOF
-[Desktop Entry]
-Name=LXQt with Labwc
-Comment=LXQt desktop environment with Labwc window manager
-Exec=startlxqt
-Type=Application
-DesktopNames=LXQt
-EOF
-        print_success "Session file created"
-    fi
-fi
+# Note: The Wayland session file should be installed system-wide via:
+# sudo cp /usr/local/share/wayland-sessions/lxqt-labwc.desktop /usr/share/wayland-sessions/
+# This is typically handled by the lxqt-labwc-session package or manual setup.
 
 print_success "Installation completed!"
 echo ""
 print_status "What's been installed:"
 echo "  - Labwc window manager configuration"
 echo "  - LXQt desktop environment configuration"
-echo "  - Theme switcher with 20+ color schemes"
-echo "  - Dynamic menu generation"
-echo "  - Consolidated configuration files"
+echo "  - Vermello theme (Openbox-style)"
+echo "  - Dynamic menu generation with systemd timer"
+echo "  - GTK/Portal sync services"
 echo ""
 print_status "Backup location: $BACKUP_DIR"
 echo ""
 print_status "Next steps:"
 echo "  1. Restart your display manager or logout/login"
-echo "  2. Select 'LXQt' session from your display manager"
-echo "  3. Use '~/.config/labwc/theme-switcher.sh' to switch themes"
-echo "  4. Use '~/.config/labwc/menu-update.sh' to update application menu"
+echo "  2. Select 'LXQt (labwc)' Wayland session from your display manager"
+echo "  3. Right-click desktop for app menu"
+echo "  4. Use Config submenu to manage Labwc settings"
 echo ""
 print_warning "If you encounter issues, restore from backup:"
 echo "  rm -rf ~/.config/labwc ~/.config/lxqt"
