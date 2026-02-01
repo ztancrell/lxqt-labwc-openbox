@@ -83,6 +83,11 @@ cp "$CONFIG_DIR/labwc/labwc-autostart.desktop" "$CONFIG_DIR/autostart/"
 print_status "Linking LXQt to use Labwc config..."
 ln -sfn "$CONFIG_DIR/labwc" "$CONFIG_DIR/lxqt/labwc"
 
+# Install GTK dark theme settings
+print_status "Installing GTK dark theme..."
+mkdir -p "$CONFIG_DIR/gtk-3.0"
+cp "$CONFIG_DIR/labwc/gtk-3.0-settings.ini" "$CONFIG_DIR/gtk-3.0/settings.ini"
+
 # Install Openbox themes (used by Labwc theme name lookup)
 print_status "Installing Openbox themes..."
 THEMES_SRC="$SCRIPT_DIR/themes"
