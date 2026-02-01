@@ -3,7 +3,7 @@
 # Simple menu update script for Labwc
 # Updates the application menu using the Python generator
 
-MENU_GENERATOR="$HOME/.config/labwc/menu-generator.py"
+MENU_GENERATOR="$HOME/.config/labwc/scripts/menu-generator.py"
 MENU_FILE="$HOME/.config/labwc/menu.xml"
 
 echo "Updating Labwc application menu..."

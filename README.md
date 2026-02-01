@@ -167,15 +167,19 @@ labwc --reconfigure
 lxqt-labwc-openbox/
 ├── install.sh             # Automated installer
 ├── labwc-config/          # Labwc compositor configs
-│   ├── labwc.xml          # Main config (theme, keybinds, menu)
+│   ├── labwc.xml          # Main config (theme, keybinds)
 │   ├── autostart          # Startup apps
-│   ├── menu-generator.py  # Dynamic menu generator
-│   ├── menu-update.sh     # Regenerate menu script
-│   ├── gtk.sh             # GTK theme sync script
-│   └── systemd/           # User services (menu timer, theme watcher, etc.)
+│   ├── environment        # Environment variables
+│   ├── buttons/           # XBM window button icons
+│   ├── scripts/           # Helper scripts
+│   │   ├── menu-generator.py
+│   │   ├── menu-update.sh
+│   │   └── gtk.sh
+│   ├── systemd/           # User services
+│   ├── templates/         # Config templates (GTK, portals, etc.)
+│   ├── idle/              # Screen idle/lock scripts
+│   └── sound/             # Sound effects
 ├── lxqt-config/           # LXQt panel/session configs
-│   ├── panel.conf         # Minimal taskbar
-│   └── session.conf       # Session settings
 ├── themes/                # Openbox themes
 │   └── Vermello/          # Default red/black theme
 └── README.md

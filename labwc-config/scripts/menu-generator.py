@@ -378,14 +378,14 @@ def print_custom_footer(handle, is_static, show_icons=True):
 		{
 			"label": "Update Menu", 
 			"action": "Execute", 
-			"cmd": "~/.config/labwc/menu-update.sh", 
+			"cmd": "~/.config/labwc/scripts/menu-update.sh", 
 			"icons": ["view-refresh", "reload", "system-software-update"]
 		},
 		{"separator": True},
 		{
 			"label": "Sync GTK Theme", 
 			"action": "Execute", 
-			"cmd": "~/.config/labwc/gtk.sh", 
+			"cmd": "~/.config/labwc/scripts/gtk.sh", 
 			"icons": ["preferences-desktop-theme", "preferences-desktop", "gtk-preferences"]
 		},
 		{

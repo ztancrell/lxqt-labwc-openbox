@@ -4,4 +4,4 @@ After=graphical-session.target
 
 [Service]
 Type=oneshot
-ExecStart=%h/.config/labwc/menu-update.sh
+ExecStart=%h/.config/labwc/scripts/menu-update.sh

@@ -66,18 +66,26 @@ fi
 # Install configurations
 print_status "Installing Labwc configuration..."
 mkdir -p "$CONFIG_DIR/labwc"
-cp -r "$SCRIPT_DIR/labwc-config/"* "$CONFIG_DIR/labwc/"
+# Copy core config files
+cp "$SCRIPT_DIR/labwc-config/autostart" "$CONFIG_DIR/labwc/"
+cp "$SCRIPT_DIR/labwc-config/environment" "$CONFIG_DIR/labwc/"
+cp "$SCRIPT_DIR/labwc-config/labwc.xml" "$CONFIG_DIR/labwc/"
+# Copy subdirectories
+cp -r "$SCRIPT_DIR/labwc-config/buttons" "$CONFIG_DIR/labwc/"
+cp -r "$SCRIPT_DIR/labwc-config/scripts" "$CONFIG_DIR/labwc/"
+cp -r "$SCRIPT_DIR/labwc-config/idle" "$CONFIG_DIR/labwc/"
+cp -r "$SCRIPT_DIR/labwc-config/sound" "$CONFIG_DIR/labwc/"
+cp -r "$SCRIPT_DIR/labwc-config/systemd" "$CONFIG_DIR/labwc/"
+cp -r "$SCRIPT_DIR/labwc-config/templates" "$CONFIG_DIR/labwc/"
 
 print_status "Installing LXQt configuration..."
 mkdir -p "$CONFIG_DIR/lxqt"
 cp -r "$SCRIPT_DIR/lxqt-config/"* "$CONFIG_DIR/lxqt/"
 
-rm -f "$CONFIG_DIR/labwc/themerc-override"
-
 # Install XDG autostart entry (runs labwc autostart when LXQt starts)
 print_status "Installing autostart entry..."
 mkdir -p "$CONFIG_DIR/autostart"
-cp "$CONFIG_DIR/labwc/labwc-autostart.desktop" "$CONFIG_DIR/autostart/"
+cp "$CONFIG_DIR/labwc/templates/labwc-autostart.desktop" "$CONFIG_DIR/autostart/"
 
 # Symlink LXQt's labwc config path to our labwc config directory
 print_status "Linking LXQt to use Labwc config..."
@@ -86,12 +94,12 @@ ln -sfn "$CONFIG_DIR/labwc" "$CONFIG_DIR/lxqt/labwc"
 # Install GTK dark theme settings
 print_status "Installing GTK dark theme..."
 mkdir -p "$CONFIG_DIR/gtk-3.0"
-cp "$CONFIG_DIR/labwc/gtk-3.0-settings.ini" "$CONFIG_DIR/gtk-3.0/settings.ini"
+cp "$CONFIG_DIR/labwc/templates/gtk-3.0-settings.ini" "$CONFIG_DIR/gtk-3.0/settings.ini"
 
 # Install xdg-desktop-portal config (fixes file picker on Wayland)
 print_status "Installing portal configuration..."
 mkdir -p "$CONFIG_DIR/xdg-desktop-portal"
-cp "$CONFIG_DIR/labwc/xdg-desktop-portal-portals.conf" "$CONFIG_DIR/xdg-desktop-portal/portals.conf"
+cp "$CONFIG_DIR/labwc/templates/xdg-desktop-portal-portals.conf" "$CONFIG_DIR/xdg-desktop-portal/portals.conf"
 
 # Install systemd services and timers
 print_status "Installing systemd services..."
@@ -117,15 +125,14 @@ fi
 
 # Set permissions
 print_status "Setting correct permissions..."
-chmod +x "$CONFIG_DIR/labwc"/*.sh
-chmod +x "$CONFIG_DIR/labwc/menu-generator.py"
-chmod +x "$CONFIG_DIR/labwc/menu-generator.sh"
+chmod +x "$CONFIG_DIR/labwc/scripts"/*.sh
+chmod +x "$CONFIG_DIR/labwc/scripts"/*.py
 chmod +x "$CONFIG_DIR/labwc/idle"/*.sh
 
 # Generate initial menu
 print_status "Generating application menu..."
-if [ -f "$CONFIG_DIR/labwc/menu-update.sh" ]; then
-    "$CONFIG_DIR/labwc/menu-update.sh"
+if [ -f "$CONFIG_DIR/labwc/scripts/menu-update.sh" ]; then
+    "$CONFIG_DIR/labwc/scripts/menu-update.sh"
 fi
 
 # Note: The Wayland session file should be installed system-wide via:

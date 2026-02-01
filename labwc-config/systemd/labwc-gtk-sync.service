@@ -4,7 +4,7 @@ After=graphical-session.target
 
 [Service]
 Type=oneshot
-ExecStart=%h/.config/labwc/gtk.sh
+ExecStart=%h/.config/labwc/scripts/gtk.sh
 
 [Install]
 WantedBy=graphical-session.target
