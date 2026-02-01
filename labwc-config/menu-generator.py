@@ -294,7 +294,7 @@ def process_dtfile(dtf,  catDict):  # process this file & extract relevant info
 addIconsToList(iconList, selected_theme) 
 categoryDict = {}
 
-def print_custom_footer(handle, is_static):
+def print_custom_footer(handle, is_static, show_icons=True):
 	# Quick launch items at top level
 	quick_items = [
 		{
@@ -373,7 +373,7 @@ def print_custom_footer(handle, is_static):
 				print("<separator />")
 			return
 		
-		iconPath = find_best_icon(item["icons"])
+		iconPath = find_best_icon(item["icons"]) if show_icons else None
 		
 		if is_static:
 			handle.write(f'{indent}<item label="{item["label"]}"')
@@ -408,7 +408,7 @@ def print_custom_footer(handle, is_static):
 		write_item(item)
 
 	# Print System submenu
-	systemIcon = find_best_icon(["preferences-system", "system", "applications-system"])
+	systemIcon = find_best_icon(["preferences-system", "system", "applications-system"]) if show_icons else None
 	if is_static:
 		handle.write('        <menu id="system-menu" label="System"')
 		if systemIcon:
@@ -435,10 +435,12 @@ if __name__ == "__main__":
 	)
 	parser.add_argument("-o", "--output", help="Path to output file for static menu generation.")
 	parser.add_argument("-f", "--footer", default="true", help="Show custom footer (true/false). Default: true")
+	parser.add_argument("-n", "--no-icons", action="store_true", help="Disable icons in menu")
 	args = parser.parse_args()
 
 	# Logic to convert string argument to boolean
 	show_footer = str(args.footer).lower() in ("true", "1", "yes", "on", "t")
+	show_icons = not args.no_icons
 
 	application_groups=sorted(application_groups, key=str.lower)
 	for appGroup in application_groups:
@@ -490,7 +492,7 @@ if __name__ == "__main__":
 		
 		if args.output:
 			menu_line = f'        <menu id="{groupName}" label="{groupName}"'
-			if groupIcon:
+			if groupIcon and show_icons:
 				menu_line += f' icon="{groupIcon}"'
 			menu_line += ">"
 			output_handle.write(menu_line + "\n")
@@ -507,7 +509,7 @@ if __name__ == "__main__":
 				cmdString = xescape(cmdString)
 
 				item_line = f'            <item label="{appName}"'
-				if appIcon:
+				if appIcon and show_icons:
 					item_line += f' icon="{appIcon}"'
 				item_line += ">"
 				output_handle.write(item_line + "\n")
@@ -520,13 +522,13 @@ if __name__ == "__main__":
 
 		else:
 			catStr = "<menu id=\"openbox-%s\" label=\"%s\" " % (groupName, groupName)
-			if groupIcon != "":
+			if groupIcon != "" and show_icons:
 				catStr += "icon=\"%s\"" % groupIcon
 			print (catStr + ">")
 			for app in catList:
 				progStr = "<item "
 				progStr += "label=\"%s\" " % app[0] 
-				if app[1][0] != "": 
+				if app[1][0] != "" and show_icons: 
 					progStr += "icon=\"%s\" " % app[1][0] 
 				progStr += "><action name=\"Execute\"><command><![CDATA["
 				if app[1][1] == True:  
@@ -537,7 +539,7 @@ if __name__ == "__main__":
 
 	# --- PRINT CUSTOM FOOTER ---
 	if show_footer:
-		print_custom_footer(output_handle, args.output)
+		print_custom_footer(output_handle, args.output, show_icons)
 
 	# WRITE FOOTERS
 	if args.output:

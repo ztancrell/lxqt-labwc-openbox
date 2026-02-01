@@ -13,8 +13,8 @@ menu.separator.padding.height: 2
 menu.separator.color: #141c21
 
 !! menu border
-menu.border.width: 8
-menu.border.color: #141c21
+menu.border.width: 1
+menu.border.color: #3a4a54
 
 !! menu headers
 menu.title.bg: flat

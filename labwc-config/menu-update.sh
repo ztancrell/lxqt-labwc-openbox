@@ -14,8 +14,8 @@ if [ ! -f "$MENU_GENERATOR" ]; then
     exit 1
 fi
 
-# Generate menu without footer (cleaner look)
-if python3 "$MENU_GENERATOR" -f false -o "$MENU_FILE"; then
+# Generate menu without icons (cleaner look)
+if python3 "$MENU_GENERATOR" --no-icons -o "$MENU_FILE"; then
     echo "Menu updated successfully"
     
     # Reload labwc configuration
