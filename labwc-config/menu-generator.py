@@ -75,20 +75,27 @@ ignoreList = (
     # Background services (not user-facing)
     "xwaylandvideobridge", "org.freedesktop.Xwayland", "pinentry", "picom", "compton",
     # KDE internal tools
-    "knewstuff-dialog", "keditbookmarks", "kinfocenter",
+    "knewstuff-dialog", "keditbookmarks", "kinfocenter", "org.kde.systemsettings",
     # Session/power items (handled by our Session submenu)
     "lxqt-leave.desktop",
     # Duplicate settings apps  
-    "org.kde.systemsettings", "lxappearance.desktop",
+    "lxappearance.desktop", "systemsettings.desktop",
     # Wayfire (not using this compositor)
     "wcm.desktop", "wayfire",
-    # Misc junk
-    "Ted", "wingide3.2", "python3.4", "feh", "xfce4-power-manager-settings", "tecla.desktop",
-    "gnome-abrt", "sealert",
+    # Misc junk/niche tools
+    "Ted", "wingide3.2", "python3.4", "feh", "xfce4-power-manager-settings", 
+    "org.gnome.Tecla", "gnome-abrt", "sealert",
+    "gkbd-keyboard-display",  # keyboard layout viewer
+    # IBus input methods (niche)
+    "ibus-setup", "org.freedesktop.IBus", "im-chooser",
     # Terminals (we have quick launch)
-    "xterm.desktop", "qterminal.desktop", "qterminal-drop.desktop",
+    "xterm.desktop", "qterminal.desktop", "qterminal-drop.desktop", "Alacritty.desktop",
     # More session items
     "lxqt-hibernate", "lxqt-lockscreen", "lxqt-logout", "lxqt-reboot", "lxqt-shutdown", "lxqt-suspend",
+    # Java dev tools (not general use)
+    "jconsole", "openjdk",
+    # Desktop prefs (not useful without desktop icons)
+    "pcmanfm-qt-desktop-pref",
 )
 
 prefixes = ("legacy","categories","apps","devices","mimetypes","places","preferences","actions", "status","emblems") #added for prefered icon dirs and sizes. could be gathered automatically but wouldn't be sorted like this
@@ -169,6 +176,11 @@ class dtItem(object):
 	def addExec(self, data):
 		if len(data) > 3 and data[-2] == '%': # get rid of filemanager arguments in dt files
 			data = data[:-2].strip()
+		# Use command name only if it's in /usr/bin (more reliable)
+		if data.startswith('/usr/bin/'):
+			cmd = data[9:].split()[0]  # Get just the command name
+			args = ' '.join(data.split()[1:]) if len(data.split()) > 1 else ''
+			data = cmd + (' ' + args if args else '')
 		self.Exec = data
 
 	def addIcon(self, data):
@@ -317,8 +329,17 @@ def process_dtfile(dtf,  catDict):  # process this file & extract relevant info
 		else:
 			continue
 	if len(this.Categories) > 0:       
-		# Only add to first category to prevent duplicates
-		catDict[this.Categories[0]].append(this)
+		# Priority order for category selection (higher priority wins)
+		category_priority = ["Games", "Multimedia", "Graphics", "Office", "Internet", "Editors", "System", "Settings", "Utilities", "Other"]
+		best_cat = this.Categories[0]
+		best_priority = 999
+		for cat in this.Categories:
+			if cat in category_priority:
+				priority = category_priority.index(cat)
+				if priority < best_priority:
+					best_priority = priority
+					best_cat = cat
+		catDict[best_cat].append(this)
 
 addIconsToList(iconList, selected_theme) 
 categoryDict = {}
