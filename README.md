@@ -1,35 +1,37 @@
 # LXQt + Labwc Openbox Style Configuration
 
-A complete configuration setup that combines LXQt desktop environment with Labwc window manager, styled to look and feel like Openbox.
+A minimal, Openbox-inspired Wayland desktop using LXQt and Labwc. Clean, fast, and keyboard-driven.
 
 ## Overview
 
-This repository provides configuration files to create a lightweight, Openbox-styled desktop environment using:
-- **LXQt** - Lightweight Qt-based desktop environment
+This repository provides a complete configuration for a lightweight Wayland desktop:
 - **Labwc** - Wayland compositor inspired by Openbox
-- **Openbox styling** - Classic look and feel with modern Wayland support
+- **LXQt** - Lightweight Qt-based panel and session
+- **Vermello Theme** - Clean red/black Openbox-style decorations
+- **Right-click Menu** - Openbox-style desktop menu with app categories and session controls
 
-## New Features (Updated)
+## Features
 
-### Theme System
-- **20+ Color Schemes**: Nord, Dracula, Catppuccin, Gruvbox, Tokyo Night, and more
-- **Theme Switcher**: Easy command-line theme switching with `theme-switcher.sh`
-- **Dynamic Theming**: Instant theme changes without restart
+### Minimal Desktop
+- **No desktop icons** - Clean, distraction-free workspace
+- **Taskbar only** - Panel shows running apps, tray, clock (no app menu or quicklaunch)
+- **Right-click menu** - All app launching via Openbox-style desktop menu
 
-### Consolidated Configuration
-- **Unified Config**: Single `labwc-consolidated.xml` replaces conflicting configs
-- **Consistent Keybindings**: Standardized shortcuts across all applications
-- **Resolved Conflicts**: Fixed theme and keybinding inconsistencies
+### Vermello Theme
+- **Server-side decorations** - Consistent titlebars across all apps
+- **Red titlebar** - Active windows with Vermello red (#ea545c)
+- **Minimal borders** - Clean look with subtle outlines
 
-### Enhanced Menu System
-- **Dynamic Generation**: Automatic application menu updates
-- **Clean Interface**: Streamlined menu without footer clutter
-- **Easy Updates**: One-command menu regeneration
+### Openbox-Style Menu
+- **App categories** - Editors, Games, Graphics, Internet, Multimedia, Office, Settings, System, Utilities
+- **Quick launch** - Terminal, File Manager, Web Browser at top level
+- **Session submenu** - Lock, Suspend, Hibernate, Log Out, Reboot, Shutdown
+- **No icons** - Clean text-only menu with subtle border
 
-### Installation Tools
-- **Automated Installer**: `install.sh` handles everything automatically
-- **Safe Backups**: Automatic backup of existing configurations
-- **Session Integration**: Creates desktop session entries
+### Installation
+- **Automated installer** - `install.sh` handles everything
+- **Safe backups** - Existing configs backed up automatically
+- **XDG autostart** - Proper integration with LXQt session
 
 ## Quick Start
 
@@ -80,160 +82,116 @@ chmod +x ~/.config/labwc/menu-generator.*
 
 ### Labwc Configuration (`labwc-config/`)
 
-- `labwc-consolidated.xml` - **NEW**: Unified configuration file
-- `labwc.xml` - Main Labwc configuration (now uses consolidated config)
-- `rc.xml` - Window manager settings (now uses consolidated config)
-- `menu.xml` - Application menu configuration
-- `themerc` - Theme configuration
-- `themerc-override` - Theme customizations
-- `autostart` - Applications to launch on startup
-- `theme-switcher.sh` - **NEW**: Theme switching utility
-- `menu-update.sh` - **NEW**: Simple menu update utility
-- `colors/` - **NEW**: 20+ pre-made color schemes
+- `labwc.xml` - Main Labwc configuration (theme, keybinds, menu)
+- `rc.xml` - Window manager settings
+- `menu.xml` - Generated application menu
+- `autostart` - Startup applications (wallpaper, clipboard, notifications, idle)
+- `labwc-autostart.desktop` - XDG autostart entry for LXQt integration
+- `menu-generator.py` - Dynamic menu generator with categories
+- `menu-update.sh` - Regenerate menu from installed apps
+- `theme-switcher.sh` - Switch Openbox themes by name
 - `*.xbm` - Window button bitmaps
-- `menu-generator.*` - Dynamic menu generation scripts
 
 ### LXQt Configuration (`lxqt-config/`)
 
-- `panel.conf` - Panel configuration
-- `globalkeyshortcuts.conf` - Global keyboard shortcuts
+- `panel.conf` - Minimal panel (taskbar, tray, clock only)
+- `session.conf` - Session settings (Labwc compositor, GTK settings)
 - `lxqt.conf` - Main LXQt settings
-- `session.conf` - Session management
-- `windowmanagers.conf` - Window manager integration
 
-### Scripts
+### Themes (`themes/`)
 
-- `setup-theme.sh` - Theme setup script
-- `gtk.sh` - GTK theme configuration
-- `menu-generator.py` - Python menu generator
-- `device-monitor.sh` - Device monitoring script
+- `Vermello/` - Default red/black Openbox theme
 
 ## Customization
 
 ### Theme Customization
 
-Edit the following files to customize the appearance:
-- `labwc-config/themerc` - Main theme settings
-- `labwc-config/themerc-override` - Theme overrides
-- `labwc-config/colors/` - Color schemes
+Edit `themes/Vermello/openbox-3/themerc` to customize:
+- Titlebar colors
+- Menu colors and borders
+- Button styling
+
+Switch themes with:
+```bash
+~/.config/labwc/theme-switcher.sh <theme-name>
+```
 
 ### Menu Customization
 
-The menu can be customized by:
-1. Editing `labwc-config/menu.xml` directly
-2. Using the menu generator: `./menu-generator.sh`
-3. Modifying `menu-generator.py` for custom menu logic
+Regenerate menu after installing new apps:
+```bash
+~/.config/labwc/menu-update.sh
+```
+
+Edit `menu-generator.py` to customize:
+- Quick launch items (Terminal, File Manager, Browser)
+- Session submenu items
+- App category filtering
 
 ### Keybindings
 
-Edit `labwc-config/rc.xml` to modify keyboard shortcuts and mouse actions.
-
-### Panel Configuration
-
-Edit `lxqt-config/panel.conf` to customize the LXQt panel layout and applets.
+Edit `labwc-config/labwc.xml` under `<keyboard>` section. Default bindings:
+- `Super+Return` - Terminal
+- `Super+D` - Fuzzel launcher
+- `Super+Q` - Close window
+- `Super+F` - Fullscreen
+- `Super+Space` - Show menu
 
 ## Usage
 
 ### Starting the Session
 
-1. From a display manager (SDDM, LightDM, etc.) - Select "LXQt" session
-2. From command line:
-   ```bash
-   startlxqt
-   ```
-3. With custom xinitrc:
-   ```bash
-   startx ~/.xinitrc
-   ```
+1. From display manager - Select **"LXQt + Labwc"** (Wayland session)
+2. Or select **"LXQt"** for X11 fallback
 
-### Theme Management
+### Common Tasks
 
-#### Interactive Theme Switching
 ```bash
-~/.config/labwc/theme-switcher.sh --interactive
-```
+# Update application menu
+~/.config/labwc/menu-update.sh
 
-#### Command Line Theme Switching
-```bash
-# Switch to specific theme
-~/.config/labwc/theme-switcher.sh nord
-~/.config/labwc/theme-switcher.sh dracula
-~/.config/labwc/theme-switcher.sh catppuccin
+# Switch theme
+~/.config/labwc/theme-switcher.sh Vermello
 
 # List available themes
 ~/.config/labwc/theme-switcher.sh --list
 
-# Restore previous theme
-~/.config/labwc/theme-switcher.sh --restore
-```
-
-#### System-wide Theme Switching (if installed)
-```bash
-labwc-theme nord
-labwc-theme --list
-```
-
-### Menu Management
-
-#### Update Application Menu
-```bash
-~/.config/labwc/menu-update.sh
-```
-
-#### Advanced Menu Generation (with rofi)
-```bash
-~/.config/labwc/menu-generator.sh
-```
-
-### Configuration Management
-
-#### Reload Configuration
-```bash
-# Reload Labwc settings
-labwcctl reload
-
-# Or use keybinding: W-Shift-c
-```
-
-#### View Available Themes
-```bash
-ls ~/.config/labwc/colors/*.color | sed 's|.*/||' | sed 's|\.color||'
+# Reload Labwc config (or use Super+Shift+C)
+labwc --reconfigure
 ```
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **Menu not updating**: Run the menu generator script
-2. **Theme not applying**: Check permissions on theme files and run setup script
-3. **Keybindings not working**: Verify syntax in `rc.xml`
-4. **Panel not showing**: Check LXQt session configuration
+1. **White titlebar on some apps** - App is using client-side decorations (CSD). Add to app config:
+   - Alacritty: `window.decorations: none` in `~/.config/alacritty/alacritty.yml`
+   - GTK apps: Set `GTK_CSD=0` in environment
 
-### Logs
+2. **Right-click menu not showing** - pcmanfm-qt is capturing desktop. The autostart kills it automatically.
 
-Check the following logs for debugging:
-- Labwc: `~/.local/share/labwc/labwc.log`
-- LXQt: `~/.local/share/lxqt/lxqt-session.log`
-- X11/Wayland: `.xsession-errors`
+3. **Menu not updating** - Run `~/.config/labwc/menu-update.sh`
+
+4. **Double panel** - LXQt starts its own panel; don't add lxqt-panel to autostart.
 
 ## File Structure
 
 ```
 lxqt-labwc-openbox/
-├── labwc-config/          # Labwc window manager configs
-│   ├── labwc.xml         # Main configuration
-│   ├── rc.xml            # Keybindings and settings
-│   ├── menu.xml          # Application menu
-│   ├── themerc           # Theme configuration
-│   ├── autostart         # Startup applications
-│   └── *.sh              # Setup scripts
-├── lxqt-config/           # LXQt desktop environment configs
-│   ├── panel.conf        # Panel settings
-│   ├── lxqt.conf         # Main LXQt config
-│   └── *.conf            # Various LXQt components
-├── scripts/               # Additional utility scripts
-├── docs/                  # Documentation
-└── README.md             # This file
+├── install.sh             # Automated installer
+├── labwc-config/          # Labwc compositor configs
+│   ├── labwc.xml          # Main config (theme, keybinds, menu)
+│   ├── autostart          # Startup apps
+│   ├── menu-generator.py  # Menu generator
+│   ├── menu-update.sh     # Regenerate menu
+│   ├── theme-switcher.sh  # Switch themes
+│   └── labwc-autostart.desktop  # XDG autostart for LXQt
+├── lxqt-config/           # LXQt panel/session configs
+│   ├── panel.conf         # Minimal taskbar
+│   └── session.conf       # Session settings
+├── themes/                # Openbox themes
+│   └── Vermello/          # Default red/black theme
+└── README.md
 ```
 
 ## Contributing
