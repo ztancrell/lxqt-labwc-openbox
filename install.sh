@@ -88,6 +88,11 @@ print_status "Installing GTK dark theme..."
 mkdir -p "$CONFIG_DIR/gtk-3.0"
 cp "$CONFIG_DIR/labwc/gtk-3.0-settings.ini" "$CONFIG_DIR/gtk-3.0/settings.ini"
 
+# Install xdg-desktop-portal config (fixes file picker on Wayland)
+print_status "Installing portal configuration..."
+mkdir -p "$CONFIG_DIR/xdg-desktop-portal"
+cp "$CONFIG_DIR/labwc/xdg-desktop-portal-portals.conf" "$CONFIG_DIR/xdg-desktop-portal/portals.conf"
+
 # Install Openbox themes (used by Labwc theme name lookup)
 print_status "Installing Openbox themes..."
 THEMES_SRC="$SCRIPT_DIR/themes"

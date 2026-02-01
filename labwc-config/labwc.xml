@@ -38,7 +38,7 @@
     <dropShadows>no</dropShadows>
     <maximizedDecoration>none</maximizedDecoration>
     <titlebar>
-      <layout>icon:iconify,max,close</layout>
+      <layout>:iconify,max,close</layout>
     </titlebar>
     <font place="ActiveWindow"><name>Sans</name><size>7</size></font>
     <font place="InactiveWindow"><name>Sans</name><size>7</size></font>
