@@ -61,10 +61,39 @@ if selected_theme is None:
 
 application_groups = ("AudioVideo", "Development", "Editors",  "Engineering", "Games", "Graphics", "Internet",  "Multimedia", "Office",  "Other",  "Settings", "System",  "Utilities") # enter here new category as you wish, it will be sorted
 group_aliases = {"Audio":"Multimedia","Video":"Multimedia","AudioVideo":"Multimedia","Network":"Internet","Game":"Games", "Utility":"Utilities", "Development":"Editors","GTK":"",  "GNOME":""}
-ignoreList = ("gtk3-icon-browser","evince-previewer", "Ted",  "wingide3.2", "python3.4", "feh","xfce4-power-manager-settings", "picom","compton","yad-icon-browser" )
+
+# Expanded ignore list - remove duplicates, X11-only apps, internal tools, URL handlers
+# NOTE: These are matched against the .desktop filename path
+ignoreList = (
+    # Internal/demo tools
+    "gtk3-icon-browser", "gtk3-demo", "gtk3-widget-factory", "evince-previewer", "yad-icon-browser",
+    # URL handlers (duplicates of main apps)
+    "windsurf-url-handler", "code-url-handler",
+    # X11-only tools (not useful in Wayland/Labwc)
+    "arandr.desktop", "obconf.desktop", "xfce4-panel", "xfce4-im-chooser", "xscreensaver-settings", 
+    "lxsession-default-apps", "lxsession-edit",
+    # Background services (not user-facing)
+    "xwaylandvideobridge", "org.freedesktop.Xwayland", "pinentry", "picom", "compton",
+    # KDE internal tools
+    "knewstuff-dialog", "keditbookmarks", "kinfocenter",
+    # Session/power items (handled by our Session submenu)
+    "lxqt-leave.desktop",
+    # Duplicate settings apps  
+    "org.kde.systemsettings", "lxappearance.desktop",
+    # Wayfire (not using this compositor)
+    "wcm.desktop", "wayfire",
+    # Misc junk
+    "Ted", "wingide3.2", "python3.4", "feh", "xfce4-power-manager-settings", "tecla.desktop",
+    "gnome-abrt", "sealert",
+    # Terminals (we have quick launch)
+    "xterm.desktop", "qterminal.desktop", "qterminal-drop.desktop",
+    # More session items
+    "lxqt-hibernate", "lxqt-lockscreen", "lxqt-logout", "lxqt-reboot", "lxqt-shutdown", "lxqt-suspend",
+)
+
 prefixes = ("legacy","categories","apps","devices","mimetypes","places","preferences","actions", "status","emblems") #added for prefered icon dirs and sizes. could be gathered automatically but wouldn't be sorted like this
 iconSizes = ("48","32","24","16","48x48","40x40","36x36","32x32","24x24","64x64","72x72","96x96","16x16","128x128","256x256","scalable","apps","symbolic")
-terminal_string = "foot"
+terminal_string = "alacritty"
   
 #constants and list for icon list generating
 image_file_prefix = (".png", ".svg", ".xpm")
@@ -288,8 +317,8 @@ def process_dtfile(dtf,  catDict):  # process this file & extract relevant info
 		else:
 			continue
 	if len(this.Categories) > 0:       
-		for cat in this.Categories:
-			catDict[cat].append(this)
+		# Only add to first category to prevent duplicates
+		catDict[this.Categories[0]].append(this)
 
 addIconsToList(iconList, selected_theme) 
 categoryDict = {}
@@ -317,8 +346,50 @@ def print_custom_footer(handle, is_static, show_icons=True):
 		},
 	]
 	
-	# System submenu items (Openbox-style)
-	system_items = [
+	# Config submenu items
+	config_items = [
+		{
+			"label": "Reconfigure Labwc", 
+			"action": "Reconfigure", 
+			"cmd": None, 
+			"icons": ["view-refresh", "reload", "preferences-system"]
+		},
+		{
+			"label": "Update Menu", 
+			"action": "Execute", 
+			"cmd": "~/.config/labwc/menu-update.sh", 
+			"icons": ["view-refresh", "reload", "system-software-update"]
+		},
+		{"separator": True},
+		{
+			"label": "Sync GTK Theme", 
+			"action": "Execute", 
+			"cmd": "~/.config/labwc/gtk.sh", 
+			"icons": ["preferences-desktop-theme", "preferences-desktop", "gtk-preferences"]
+		},
+		{
+			"label": "Restart Portals", 
+			"action": "Execute", 
+			"cmd": "systemctl --user restart xdg-desktop-portal", 
+			"icons": ["view-refresh", "preferences-system", "system-run"]
+		},
+		{"separator": True},
+		{
+			"label": "Edit Labwc Config", 
+			"action": "Execute", 
+			"cmd": "xdg-open ~/.config/labwc/labwc.xml", 
+			"icons": ["text-editor", "accessories-text-editor", "gedit"]
+		},
+		{
+			"label": "Edit Theme", 
+			"action": "Execute", 
+			"cmd": "xdg-open ~/.local/share/themes/Vermello/openbox-3/themerc", 
+			"icons": ["preferences-desktop-theme", "preferences-desktop", "applications-graphics"]
+		},
+	]
+
+	# Session submenu items (Openbox-style)
+	session_items = [
 		{
 			"label": "Lock Screen", 
 			"action": "Execute", 
@@ -336,13 +407,6 @@ def print_custom_footer(handle, is_static, show_icons=True):
 			"action": "Execute", 
 			"cmd": "systemctl hibernate", 
 			"icons": ["system-hibernate", "gnome-session-hibernate"]
-		},
-		{"separator": True},
-		{
-			"label": "Reconfigure", 
-			"action": "Reconfigure", 
-			"cmd": None, 
-			"icons": ["view-refresh", "reload", "system-reboot"]
 		},
 		{"separator": True},
 		{
@@ -407,23 +471,49 @@ def print_custom_footer(handle, is_static, show_icons=True):
 	for item in quick_items:
 		write_item(item)
 
+	# Separator before submenus
+	if is_static:
+		handle.write('        <separator />\n')
+	else:
+		print("<separator />")
+
+	# Print Config submenu
+	configIcon = find_best_icon(["preferences-system", "preferences-desktop", "applications-system"]) if show_icons else None
+	if is_static:
+		handle.write('        <menu id="config-menu" label="Config"')
+		if configIcon:
+			handle.write(f' icon="{configIcon}"')
+		handle.write('>\n')
+		for item in config_items:
+			write_item(item, "            ")
+		handle.write('        </menu>\n')
+	else:
+		cfgMenuStr = '<menu id="config-menu" label="Config"'
+		if configIcon:
+			cfgMenuStr += f' icon="{configIcon}"'
+		cfgMenuStr += '>'
+		print(cfgMenuStr)
+		for item in config_items:
+			write_item(item, "")
+		print('</menu>')
+
 	# Print Session submenu (power/logout options)
-	systemIcon = find_best_icon(["system-log-out", "gnome-logout", "preferences-system"]) if show_icons else None
+	sessionIcon = find_best_icon(["system-log-out", "gnome-logout", "preferences-system"]) if show_icons else None
 	if is_static:
 		handle.write('        <menu id="session-menu" label="Session"')
-		if systemIcon:
-			handle.write(f' icon="{systemIcon}"')
+		if sessionIcon:
+			handle.write(f' icon="{sessionIcon}"')
 		handle.write('>\n')
-		for item in system_items:
+		for item in session_items:
 			write_item(item, "            ")
 		handle.write('        </menu>\n')
 	else:
 		sysMenuStr = '<menu id="session-menu" label="Session"'
-		if systemIcon:
-			sysMenuStr += f' icon="{systemIcon}"'
+		if sessionIcon:
+			sysMenuStr += f' icon="{sessionIcon}"'
 		sysMenuStr += '>'
 		print(sysMenuStr)
-		for item in system_items:
+		for item in session_items:
 			write_item(item, "")
 		print('</menu>')
 
