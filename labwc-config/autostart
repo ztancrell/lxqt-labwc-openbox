@@ -24,9 +24,6 @@ wl-clip-persist --clipboard regular &
 wl-paste --type text --watch cliphist store &
 wl-paste --type image --watch cliphist store &
 
-# Start LXQt panel
-lxqt-panel &
-
 # Set wallpaper (replace with your preferred method)
 swaybg -c "#141c21" &
 
