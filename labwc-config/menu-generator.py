@@ -407,10 +407,10 @@ def print_custom_footer(handle, is_static, show_icons=True):
 	for item in quick_items:
 		write_item(item)
 
-	# Print System submenu
-	systemIcon = find_best_icon(["preferences-system", "system", "applications-system"]) if show_icons else None
+	# Print Session submenu (power/logout options)
+	systemIcon = find_best_icon(["system-log-out", "gnome-logout", "preferences-system"]) if show_icons else None
 	if is_static:
-		handle.write('        <menu id="system-menu" label="System"')
+		handle.write('        <menu id="session-menu" label="Session"')
 		if systemIcon:
 			handle.write(f' icon="{systemIcon}"')
 		handle.write('>\n')
@@ -418,7 +418,7 @@ def print_custom_footer(handle, is_static, show_icons=True):
 			write_item(item, "            ")
 		handle.write('        </menu>\n')
 	else:
-		sysMenuStr = '<menu id="system-menu" label="System"'
+		sysMenuStr = '<menu id="session-menu" label="Session"'
 		if systemIcon:
 			sysMenuStr += f' icon="{systemIcon}"'
 		sysMenuStr += '>'
