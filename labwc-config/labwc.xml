@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <labwc>
   <!-- Output configuration for dual monitors -->
-  <output name="card1-DP-1">
-    <mode width="1920" height="1080" refresh="60"/>
-    <scale>1</scale>
-    <transform>normal</transform>
-    <position x="0" y="0"/>
-  </output>
-  <output name="card1-HDMI-A-1">
-    <mode width="1920" height="1080" refresh="60"/>
-    <scale>1</scale>
-    <transform>normal</transform>
-    <position x="1920" y="0"/>
-  </output>
+<!-- Output configuration -->
+<output>
+  <name>*</name>
+</output>
 
   <core>
     <decoration>server</decoration>
@@ -53,25 +45,9 @@
   </theme>
 
   <!-- Right-click menu -->
-  <menu>
-    <item label="Terminal" action="Execute">
-      <command>alacritty</command>
-    </item>
-    <item label="Launcher" action="Execute">
-      <command>fuzzel</command>
-    </item>
-    <item label="File Manager" action="Execute">
-      <command>thunar</command>
-    </item>
-    <separator/>
-    <item label="Theme Switcher" action="Execute">
-      <command>~/.config/labwc/theme-switcher.sh</command>
-    </item>
-    <item label="Reload Config" action="Custom">
-      <command>labwcctl reload</command>
-    </item>
-    <item label="Logout" action="Exit"/>
-  </menu>
+<menu>
+  <file>menu.xml</file>
+</menu>
 
   <!-- Consolidated keyboard shortcuts -->
   <keyboard>
@@ -99,7 +75,7 @@
     
     <!-- Configuration -->
     <keybind key="W-Shift-c">
-      <action name="Custom"><command>labwcctl reload</command></action>
+      <action name="Custom"><command>labwc --reconfigure</command></action>
     </keybind>
     <keybind key="W-c">
       <action name="Reconfigure"/>

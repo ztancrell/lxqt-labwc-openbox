@@ -74,6 +74,15 @@ cp -r "$SCRIPT_DIR/lxqt-config/"* "$CONFIG_DIR/lxqt/"
 
 rm -f "$CONFIG_DIR/labwc/themerc-override"
 
+# Install XDG autostart entry (runs labwc autostart when LXQt starts)
+print_status "Installing autostart entry..."
+mkdir -p "$CONFIG_DIR/autostart"
+cp "$CONFIG_DIR/labwc/labwc-autostart.desktop" "$CONFIG_DIR/autostart/"
+
+# Symlink LXQt's labwc config path to our labwc config directory
+print_status "Linking LXQt to use Labwc config..."
+ln -sfn "$CONFIG_DIR/labwc" "$CONFIG_DIR/lxqt/labwc"
+
 # Install Openbox themes (used by Labwc theme name lookup)
 print_status "Installing Openbox themes..."
 THEMES_SRC="$SCRIPT_DIR/themes"

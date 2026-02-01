@@ -1,6 +1,9 @@
 # Desktop Login sound
 paplay ~/.config/labwc/sound/desktop-login.oga >/dev/null 2>&1 &
 
+# Kill any LXQt desktop manager so Labwc gets right-click
+killall pcmanfm-qt 2>/dev/null || true
+
 # Device plugged audio
 bash ~/.config/labwc/device-monitor.sh >/dev/null 2>&1 &
 
@@ -21,8 +24,11 @@ wl-clip-persist --clipboard regular &
 wl-paste --type text --watch cliphist store &
 wl-paste --type image --watch cliphist store &
 
-# Waybar
-(sleep 0.5; waybar --log-level off >/dev/null 2>&1 &)
+# Start LXQt panel
+lxqt-panel &
+
+# Set wallpaper (replace with your preferred method)
+swaybg -c "#141c21" &
 
 # Notification 
 dunst >/dev/null 2>&1 &
