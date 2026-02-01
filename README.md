@@ -89,7 +89,6 @@ chmod +x ~/.config/labwc/menu-generator.*
 - `labwc-autostart.desktop` - XDG autostart entry for LXQt integration
 - `menu-generator.py` - Dynamic menu generator with categories
 - `menu-update.sh` - Regenerate menu from installed apps
-- `theme-switcher.sh` - Switch Openbox themes by name
 - `*.xbm` - Window button bitmaps
 
 ### LXQt Configuration (`lxqt-config/`)
@@ -110,11 +109,6 @@ Edit `themes/Vermello/openbox-3/themerc` to customize:
 - Titlebar colors
 - Menu colors and borders
 - Button styling
-
-Switch themes with:
-```bash
-~/.config/labwc/theme-switcher.sh <theme-name>
-```
 
 ### Menu Customization
 
@@ -150,12 +144,6 @@ Edit `labwc-config/labwc.xml` under `<keyboard>` section. Default bindings:
 # Update application menu
 ~/.config/labwc/menu-update.sh
 
-# Switch theme
-~/.config/labwc/theme-switcher.sh Vermello
-
-# List available themes
-~/.config/labwc/theme-switcher.sh --list
-
 # Reload Labwc config (or use Super+Shift+C)
 labwc --reconfigure
 ```
@@ -184,7 +172,6 @@ lxqt-labwc-openbox/
 │   ├── autostart          # Startup apps
 │   ├── menu-generator.py  # Menu generator
 │   ├── menu-update.sh     # Regenerate menu
-│   ├── theme-switcher.sh  # Switch themes
 │   └── labwc-autostart.desktop  # XDG autostart for LXQt
 ├── lxqt-config/           # LXQt panel/session configs
 │   ├── panel.conf         # Minimal taskbar
