@@ -102,7 +102,6 @@ cp "$SCRIPT_DIR/labwc-config/labwc.xml" "$CONFIG_DIR/labwc/"
 # Copy subdirectories
 cp -r "$SCRIPT_DIR/labwc-config/buttons" "$CONFIG_DIR/labwc/"
 cp -r "$SCRIPT_DIR/labwc-config/scripts" "$CONFIG_DIR/labwc/"
-cp -r "$SCRIPT_DIR/labwc-config/idle" "$CONFIG_DIR/labwc/"
 cp -r "$SCRIPT_DIR/labwc-config/sound" "$CONFIG_DIR/labwc/"
 cp -r "$SCRIPT_DIR/labwc-config/systemd" "$CONFIG_DIR/labwc/"
 cp -r "$SCRIPT_DIR/labwc-config/templates" "$CONFIG_DIR/labwc/"
