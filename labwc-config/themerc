@@ -46,11 +46,11 @@ window.active.button.*.hover.bg: flat
 window.inactive.button.*.hover.bg: parentrelative
 window.*.button.*.pressed.bg: flat
 window.active.button.*.hover.bg.color: #ea545c
-window.active.button.*.hover.image.color: #a1a1a1
+window.active.button.*.hover.image.color: #ffffff
 window.active.button.*.pressed.bg.color: #ea545c
-window.active.button.*.image.color: #ea545c
+window.active.button.*.image.color: #141c21
 window.active.button.disabled.image.color: #a1a1a1
-window.inactive.button.*.image.color: #263640
+window.inactive.button.*.image.color: #a1a1a1
 window.inactive.button.disabled.image.color: #a1a1a1
 
 !! borders
