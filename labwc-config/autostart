@@ -4,7 +4,8 @@
 paplay ~/.config/labwc/sound/desktop-login.oga >/dev/null 2>&1 &
 
 # Kill any LXQt desktop manager so Labwc gets right-click
-killall pcmanfm-qt 2>/dev/null || true
+# Delay needed because LXQt starts pcmanfm-qt AFTER labwc autostart
+(sleep 3 && killall pcmanfm-qt 2>/dev/null) &
 
 # Device plugged audio
 bash ~/.config/labwc/scripts/device-monitor.sh >/dev/null 2>&1 &
