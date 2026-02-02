@@ -79,22 +79,22 @@ print_status "=================================================="
 
 # Create backup directory
 print_status "Creating backup of existing configurations..."
-mkdir -p "$BACKUP_DIR"
+mkdir -p "$BACKUP_DIR" || { print_error "Failed to create backup directory"; exit 1; }
 
 # Backup existing configurations if they exist
 if [ -d "$CONFIG_DIR/labwc" ]; then
     print_warning "Backing up existing Labwc configuration..."
-    mv "$CONFIG_DIR/labwc" "$BACKUP_DIR/"
+    mv "$CONFIG_DIR/labwc" "$BACKUP_DIR/" || { print_error "Failed to backup Labwc config"; exit 1; }
 fi
 
 if [ -d "$CONFIG_DIR/lxqt" ]; then
     print_warning "Backing up existing LXQt configuration..."
-    mv "$CONFIG_DIR/lxqt" "$BACKUP_DIR/"
+    mv "$CONFIG_DIR/lxqt" "$BACKUP_DIR/" || { print_error "Failed to backup LXQt config"; exit 1; }
 fi
 
 # Install configurations
 print_status "Installing Labwc configuration..."
-mkdir -p "$CONFIG_DIR/labwc"
+mkdir -p "$CONFIG_DIR/labwc" || { print_error "Failed to create labwc config directory"; exit 1; }
 # Copy core config files
 cp "$SCRIPT_DIR/labwc-config/autostart" "$CONFIG_DIR/labwc/"
 cp "$SCRIPT_DIR/labwc-config/environment" "$CONFIG_DIR/labwc/"
@@ -115,8 +115,8 @@ cp -r "$SCRIPT_DIR/labwc-config/systemd" "$CONFIG_DIR/labwc/"
 cp -r "$SCRIPT_DIR/labwc-config/templates" "$CONFIG_DIR/labwc/"
 
 print_status "Installing LXQt configuration..."
-mkdir -p "$CONFIG_DIR/lxqt"
-cp -r "$SCRIPT_DIR/lxqt-config/"* "$CONFIG_DIR/lxqt/"
+mkdir -p "$CONFIG_DIR/lxqt" || { print_error "Failed to create lxqt config directory"; exit 1; }
+cp -r "$SCRIPT_DIR/lxqt-config/"* "$CONFIG_DIR/lxqt/" || { print_error "Failed to copy LXQt config"; exit 1; }
 
 # Note: We do NOT install labwc-autostart.desktop to XDG autostart
 # because labwc already runs ~/.config/labwc/autostart natively.
@@ -143,11 +143,11 @@ print_status "Installing systemd services..."
 mkdir -p "$CONFIG_DIR/systemd/user"
 cp "$CONFIG_DIR/labwc/systemd/"*.service "$CONFIG_DIR/systemd/user/"
 cp "$CONFIG_DIR/labwc/systemd/"*.timer "$CONFIG_DIR/systemd/user/"
-systemctl --user daemon-reload
-systemctl --user enable --now labwc-menu-update.timer
-systemctl --user enable labwc-gtk-sync.service
-systemctl --user enable labwc-portal-restart.service
-systemctl --user enable labwc-theme-watcher.service
+systemctl --user daemon-reload || print_warning "Failed to reload systemd daemon"
+systemctl --user enable --now labwc-menu-update.timer || print_warning "Failed to enable menu-update timer"
+systemctl --user enable labwc-gtk-sync.service || print_warning "Failed to enable gtk-sync service"
+systemctl --user enable labwc-portal-restart.service || print_warning "Failed to enable portal-restart service"
+systemctl --user enable labwc-theme-watcher.service || print_warning "Failed to enable theme-watcher service"
 
 # Install Openbox themes (used by Labwc theme name lookup)
 print_status "Installing Openbox themes..."
@@ -176,10 +176,10 @@ fi
 
 # Set permissions
 print_status "Setting correct permissions..."
-chmod +x "$CONFIG_DIR/labwc/autostart"
-chmod +x "$CONFIG_DIR/labwc/scripts"/*.sh
-chmod +x "$CONFIG_DIR/labwc/scripts"/*.py
-chmod +x "$CONFIG_DIR/labwc/idle"/*.sh
+chmod +x "$CONFIG_DIR/labwc/autostart" 2>/dev/null || print_warning "Could not set autostart permissions"
+find "$CONFIG_DIR/labwc/scripts" -name "*.sh" -exec chmod +x {} \; 2>/dev/null
+find "$CONFIG_DIR/labwc/scripts" -name "*.py" -exec chmod +x {} \; 2>/dev/null
+find "$CONFIG_DIR/labwc/idle" -name "*.sh" -exec chmod +x {} \; 2>/dev/null
 
 # Generate initial menu
 print_status "Generating application menu..."
