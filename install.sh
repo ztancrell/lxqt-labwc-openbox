@@ -156,6 +156,7 @@ fi
 
 # Set permissions
 print_status "Setting correct permissions..."
+chmod +x "$CONFIG_DIR/labwc/autostart"
 chmod +x "$CONFIG_DIR/labwc/scripts"/*.sh
 chmod +x "$CONFIG_DIR/labwc/scripts"/*.py
 chmod +x "$CONFIG_DIR/labwc/idle"/*.sh
