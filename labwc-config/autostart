@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Desktop Login sound
 paplay ~/.config/labwc/sound/desktop-login.oga >/dev/null 2>&1 &
 

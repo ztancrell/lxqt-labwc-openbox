@@ -111,10 +111,9 @@ print_status "Installing LXQt configuration..."
 mkdir -p "$CONFIG_DIR/lxqt"
 cp -r "$SCRIPT_DIR/lxqt-config/"* "$CONFIG_DIR/lxqt/"
 
-# Install XDG autostart entry (runs labwc autostart when LXQt starts)
-print_status "Installing autostart entry..."
-mkdir -p "$CONFIG_DIR/autostart"
-cp "$CONFIG_DIR/labwc/templates/labwc-autostart.desktop" "$CONFIG_DIR/autostart/"
+# Note: We do NOT install labwc-autostart.desktop to XDG autostart
+# because labwc already runs ~/.config/labwc/autostart natively.
+# Installing it would cause double execution (chime plays twice, etc.)
 
 # Symlink LXQt's labwc config path to our labwc config directory
 print_status "Linking LXQt to use Labwc config..."
