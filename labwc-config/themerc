@@ -53,6 +53,22 @@ window.active.button.disabled.image.color: #a1a1a1
 window.inactive.button.*.image.color: #a1a1a1
 window.inactive.button.disabled.image.color: #a1a1a1
 
+window.active.button.close.image.color: #ffffff
+window.active.button.max.image.color: #ffffff
+window.active.button.iconify.image.color: #ffffff
+window.active.button.shade.image.color: #ffffff
+window.active.button.desk.image.color: #ffffff
+window.active.button.close.hover.image.color: #141c21
+window.active.button.max.hover.image.color: #141c21
+window.active.button.iconify.hover.image.color: #141c21
+window.active.button.shade.hover.image.color: #141c21
+window.active.button.desk.hover.image.color: #141c21
+window.inactive.button.close.image.color: #a1a1a1
+window.inactive.button.max.image.color: #a1a1a1
+window.inactive.button.iconify.image.color: #a1a1a1
+window.inactive.button.shade.image.color: #a1a1a1
+window.inactive.button.desk.image.color: #a1a1a1
+
 !! borders
 window.active.border.color: #ea545c
 window.inactive.border.color: #ea545c
