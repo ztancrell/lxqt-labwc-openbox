@@ -574,17 +574,14 @@ if __name__ == "__main__":
 			process_dtfile(dtf,  categoryDict)
 
 	output_handle = sys.stdout
-	output_file_opened = False
 	if args.output:
 		try:
 			output_handle = open(args.output, 'w')
-			output_file_opened = True
 		except IOError as e:
 			print(f"Error opening output file: {e}", file=sys.stderr)
 			sys.exit(1)
 	
-	try:
-		if args.output:
+	if args.output:
 		output_handle.write('<?xml version="1.0" encoding="UTF-8"?>\n')
 		output_handle.write('<openbox_menu >\n')
 		output_handle.write('    <menu id="root-menu" label="Applications">\n')
@@ -665,9 +662,8 @@ if __name__ == "__main__":
 	else:
 		print ("</openbox_pipe_menu>") 
 		
-	finally:
-		if output_file_opened and output_handle != sys.stdout:
-			output_handle.close()
+	if args.output and output_handle != sys.stdout:
+		output_handle.close()
 	
 	if args.output:
 		# --- AUTO RECONFIGURE LABWC ---
