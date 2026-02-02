@@ -99,7 +99,14 @@ mkdir -p "$CONFIG_DIR/labwc"
 cp "$SCRIPT_DIR/labwc-config/autostart" "$CONFIG_DIR/labwc/"
 cp "$SCRIPT_DIR/labwc-config/environment" "$CONFIG_DIR/labwc/"
 cp "$SCRIPT_DIR/labwc-config/labwc.xml" "$CONFIG_DIR/labwc/"
-cp "$SCRIPT_DIR/labwc-config/themerc" "$CONFIG_DIR/labwc/"
+
+# Preserve existing themerc if it exists (user customizations)
+if [ -f "$BACKUP_DIR/labwc/themerc" ]; then
+    print_status "Preserving your existing themerc (restoring from backup)..."
+    cp "$BACKUP_DIR/labwc/themerc" "$CONFIG_DIR/labwc/"
+else
+    cp "$SCRIPT_DIR/labwc-config/themerc" "$CONFIG_DIR/labwc/"
+fi
 # Copy subdirectories
 cp -r "$SCRIPT_DIR/labwc-config/scripts" "$CONFIG_DIR/labwc/"
 cp -r "$SCRIPT_DIR/labwc-config/idle" "$CONFIG_DIR/labwc/"
@@ -148,7 +155,21 @@ THEMES_SRC="$SCRIPT_DIR/themes"
 THEMES_DEST="$HOME/.local/share/themes"
 if [ -d "$THEMES_SRC" ]; then
     mkdir -p "$THEMES_DEST"
-    cp -r "$THEMES_SRC/"* "$THEMES_DEST/"
+    # Preserve existing Vermello theme if it exists (user customizations)
+    if [ -d "$BACKUP_DIR/labwc" ] && [ -d "$THEMES_DEST/Vermello" ]; then
+        print_status "Preserving your existing Vermello theme (keeping window buttons and colors)..."
+    else
+        # Only install themes that don't already exist, or all if fresh install
+        for theme_dir in "$THEMES_SRC"/*/; do
+            theme_name=$(basename "$theme_dir")
+            if [ -d "$THEMES_DEST/$theme_name" ]; then
+                print_status "Skipping $theme_name theme (already exists, preserving customizations)..."
+            else
+                cp -r "$theme_dir" "$THEMES_DEST/"
+                print_status "Installed $theme_name theme"
+            fi
+        done
+    fi
 else
     print_warning "No themes/ directory found in repo; skipping theme install."
 fi
@@ -175,7 +196,7 @@ echo ""
 print_status "What's been installed:"
 echo "  - Labwc window manager configuration"
 echo "  - LXQt desktop environment configuration"
-echo "  - Vermello theme (Openbox-style)"
+echo "  - Vermello theme (Openbox-style) - existing customizations preserved"
 echo "  - Dynamic menu generation with systemd timer"
 echo "  - GTK/Portal sync services"
 echo ""
