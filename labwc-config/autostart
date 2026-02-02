@@ -3,6 +3,9 @@
 # Desktop Login sound
 paplay ~/.config/labwc/sound/desktop-login.oga >/dev/null 2>&1 &
 
+# Start LXQt panel
+lxqt-panel >/dev/null 2>&1 &
+
 # Kill any LXQt desktop manager so Labwc gets right-click
 # Delay needed because LXQt starts pcmanfm-qt AFTER labwc autostart
 (sleep 3 && killall pcmanfm-qt 2>/dev/null) &
