@@ -2,12 +2,42 @@
 
 # LXQt + Labwc Openbox Style Configuration Installer
 # This script installs the configuration files and sets up the environment
+#
+# Usage:
+#   ./install.sh           - Full install (preserves existing theme customizations)
+#   ./install.sh --reset   - Full install with reset (overwrites ALL configs with repo defaults)
 
 set -e
 
 CONFIG_DIR="$HOME/.config"
 BACKUP_DIR="$HOME/.config-backup-$(date +%Y%m%d-%H%M%S)"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+RESET_MODE=false
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --reset)
+            RESET_MODE=true
+            shift
+            ;;
+        -h|--help)
+            echo "Usage: ./install.sh [OPTIONS]"
+            echo ""
+            echo "Options:"
+            echo "  --reset    Reset all configs to repo defaults (overwrites customizations)"
+            echo "  -h, --help Show this help message"
+            echo ""
+            echo "Default behavior preserves your existing theme and color customizations."
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Use --help for usage information"
+            exit 1
+            ;;
+    esac
+done
 
 # Colors for output
 RED='\033[0;31m'
@@ -76,6 +106,17 @@ fi
 
 print_status "LXQt + Labwc Openbox Style Configuration Installer"
 print_status "=================================================="
+if [ "$RESET_MODE" = true ]; then
+    print_warning "RESET MODE: All configurations will be overwritten with repo defaults!"
+    echo -n "Continue? [y/N] "
+    read -r response
+    if [[ ! "$response" =~ ^[Yy]$ ]]; then
+        print_status "Aborted."
+        exit 0
+    fi
+else
+    print_status "Preserving existing theme and color customizations..."
+fi
 
 # Create backup directory
 print_status "Creating backup of existing configurations..."
@@ -95,24 +136,53 @@ fi
 # Install configurations
 print_status "Installing Labwc configuration..."
 mkdir -p "$CONFIG_DIR/labwc" || { print_error "Failed to create labwc config directory"; exit 1; }
+
 # Copy core config files
 cp "$SCRIPT_DIR/labwc-config/autostart" "$CONFIG_DIR/labwc/"
 cp "$SCRIPT_DIR/labwc-config/environment" "$CONFIG_DIR/labwc/"
 cp "$SCRIPT_DIR/labwc-config/labwc.xml" "$CONFIG_DIR/labwc/"
 
 # Preserve existing themerc if it exists (user customizations)
-if [ -f "$BACKUP_DIR/labwc/themerc" ]; then
+if [ "$RESET_MODE" = true ]; then
+    cp "$SCRIPT_DIR/labwc-config/themerc" "$CONFIG_DIR/labwc/"
+    print_status "Installed themerc from repo (reset mode)"
+elif [ -f "$BACKUP_DIR/labwc/themerc" ]; then
     print_status "Preserving your existing themerc (restoring from backup)..."
     cp "$BACKUP_DIR/labwc/themerc" "$CONFIG_DIR/labwc/"
 else
     cp "$SCRIPT_DIR/labwc-config/themerc" "$CONFIG_DIR/labwc/"
 fi
-# Copy subdirectories
+
+# Copy subdirectories (except colors - handled separately for preservation)
 cp -r "$SCRIPT_DIR/labwc-config/scripts" "$CONFIG_DIR/labwc/"
 cp -r "$SCRIPT_DIR/labwc-config/idle" "$CONFIG_DIR/labwc/"
 cp -r "$SCRIPT_DIR/labwc-config/sound" "$CONFIG_DIR/labwc/"
 cp -r "$SCRIPT_DIR/labwc-config/systemd" "$CONFIG_DIR/labwc/"
 cp -r "$SCRIPT_DIR/labwc-config/templates" "$CONFIG_DIR/labwc/"
+
+# Handle colors directory - preserve user's custom color schemes
+print_status "Installing color schemes..."
+mkdir -p "$CONFIG_DIR/labwc/colors"
+if [ "$RESET_MODE" = true ]; then
+    # Reset mode - overwrite all color schemes
+    cp -r "$SCRIPT_DIR/labwc-config/colors/"* "$CONFIG_DIR/labwc/colors/"
+    print_status "Installed all color schemes from repo (reset mode)"
+elif [ -d "$BACKUP_DIR/labwc/colors" ]; then
+    # Restore user's existing colors first
+    cp -r "$BACKUP_DIR/labwc/colors/"* "$CONFIG_DIR/labwc/colors/" 2>/dev/null || true
+    print_status "Restored your existing color schemes"
+    # Then add any NEW color schemes from repo that user doesn't have
+    for color_file in "$SCRIPT_DIR/labwc-config/colors/"*.color; do
+        color_name=$(basename "$color_file")
+        if [ ! -f "$CONFIG_DIR/labwc/colors/$color_name" ]; then
+            cp "$color_file" "$CONFIG_DIR/labwc/colors/"
+            print_status "Added new color scheme: $color_name"
+        fi
+    done
+else
+    # Fresh install - copy all color schemes
+    cp -r "$SCRIPT_DIR/labwc-config/colors/"* "$CONFIG_DIR/labwc/colors/"
+fi
 
 print_status "Installing LXQt configuration..."
 mkdir -p "$CONFIG_DIR/lxqt" || { print_error "Failed to create lxqt config directory"; exit 1; }
@@ -153,22 +223,39 @@ systemctl --user enable labwc-theme-watcher.service || print_warning "Failed to 
 print_status "Installing Openbox themes..."
 THEMES_SRC="$SCRIPT_DIR/themes"
 THEMES_DEST="$HOME/.local/share/themes"
+THEMES_BACKUP="$HOME/.local/share/themes-backup-$(date +%Y%m%d-%H%M%S)"
 if [ -d "$THEMES_SRC" ]; then
     mkdir -p "$THEMES_DEST"
-    # Preserve existing Vermello theme if it exists (user customizations)
-    if [ -d "$BACKUP_DIR/labwc" ] && [ -d "$THEMES_DEST/Vermello" ]; then
-        print_status "Preserving your existing Vermello theme (keeping window buttons and colors)..."
-    else
-        # Only install themes that don't already exist, or all if fresh install
-        for theme_dir in "$THEMES_SRC"/*/; do
-            theme_name=$(basename "$theme_dir")
+    
+    # Install themes - preserve existing customizations unless reset mode
+    for theme_dir in "$THEMES_SRC"/*/; do
+        theme_name=$(basename "$theme_dir")
+        if [ "$RESET_MODE" = true ]; then
+            # Reset mode - overwrite theme
             if [ -d "$THEMES_DEST/$theme_name" ]; then
-                print_status "Skipping $theme_name theme (already exists, preserving customizations)..."
-            else
-                cp -r "$theme_dir" "$THEMES_DEST/"
-                print_status "Installed $theme_name theme"
+                mkdir -p "$THEMES_BACKUP"
+                cp -r "$THEMES_DEST/$theme_name" "$THEMES_BACKUP/" 2>/dev/null || true
             fi
-        done
+            cp -r "$theme_dir" "$THEMES_DEST/"
+            print_status "Installed $theme_name theme (reset mode)"
+        elif [ -d "$THEMES_DEST/$theme_name" ]; then
+            # Theme exists - backup and preserve user's version
+            print_status "Preserving existing $theme_name theme (your customizations kept)..."
+            # Backup user's theme just in case
+            mkdir -p "$THEMES_BACKUP"
+            cp -r "$THEMES_DEST/$theme_name" "$THEMES_BACKUP/" 2>/dev/null || true
+        else
+            # Fresh theme install
+            cp -r "$theme_dir" "$THEMES_DEST/"
+            print_status "Installed $theme_name theme"
+        fi
+    done
+    
+    # If we created a themes backup, tell the user
+    if [ -d "$THEMES_BACKUP" ] && [ "$(ls -A "$THEMES_BACKUP" 2>/dev/null)" ]; then
+        print_status "Theme backup location: $THEMES_BACKUP"
+    else
+        rmdir "$THEMES_BACKUP" 2>/dev/null || true
     fi
 else
     print_warning "No themes/ directory found in repo; skipping theme install."

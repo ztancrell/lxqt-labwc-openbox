@@ -13,8 +13,8 @@ menu.separator.padding.height: 2
 menu.separator.color: #141c21
 
 !! menu border
-menu.border.width: 8
-menu.border.color: #141c21
+menu.border.width: 1
+menu.border.color: #3a4a54
 
 !! menu headers
 menu.title.bg: flat
@@ -36,28 +36,31 @@ window.inactive.title.bg.color: #263640
 !! titlebar text
 window.label.text.justify: center
 window.active.label.bg: parentrelative
-window.active.label.text.color: #141c21
+window.active.label.text.color: #ffffff
 window.inactive.label.bg: parentrelative
-window.inactive.label.text.color: #263640
+window.inactive.label.text.color: #6a7a84
 
-!! window buttons
+!! window buttons (classic Openbox style)
 window.*.button.*.bg: parentrelative
 window.active.button.*.hover.bg: flat
-window.inactive.button.*.hover.bg: parentrelative
+window.inactive.button.*.hover.bg: flat
 window.*.button.*.pressed.bg: flat
-window.active.button.*.hover.bg.color: #ea545c
-window.active.button.*.hover.image.color: #a1a1a1
-window.active.button.*.pressed.bg.color: #ea545c
-window.active.button.*.image.color: #ea545c
-window.active.button.disabled.image.color: #a1a1a1
-window.inactive.button.*.image.color: #263640
-window.inactive.button.disabled.image.color: #a1a1a1
+window.active.button.*.hover.bg.color: #c94048
+window.active.button.*.pressed.bg.color: #a03038
+window.active.button.*.image.color: #141c21
+window.active.button.*.hover.image.color: #ffffff
+window.active.button.*.pressed.image.color: #ffffff
+window.active.button.disabled.image.color: #7a4448
+window.inactive.button.*.image.color: #a1a1a1
+window.inactive.button.*.hover.bg.color: #3a4a54
+window.inactive.button.*.hover.image.color: #ffffff
+window.inactive.button.disabled.image.color: #4a5a64
 
 !! borders
 window.active.border.color: #ea545c
 window.inactive.border.color: #ea545c
-padding.width: 8
-padding.height: 8
+padding.width: 4
+padding.height: 2
 window.client.padding.width: 0
 window.client.padding.height: 0
 border.width: 0
