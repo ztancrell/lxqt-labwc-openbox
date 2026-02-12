@@ -3,12 +3,14 @@
 # Desktop Login sound
 paplay ~/.config/labwc/sound/desktop-login.oga >/dev/null 2>&1 &
 
-# NOTE: lxqt-panel is started by the LXQt session automatically
-# Do NOT start it here or you'll get duplicate panels
+# NOTE: lxqt-panel is disabled via ~/.config/autostart/lxqt-panel.desktop (Hidden=true)
+# Waybar is used instead for a minimal, stable taskbar
 
-# Kill any LXQt desktop manager so Labwc gets right-click
-# Delay needed because LXQt starts pcmanfm-qt AFTER labwc autostart
-(sleep 3 && killall pcmanfm-qt 2>/dev/null) &
+# LXQt desktop disabled via ~/.config/autostart/lxqt-desktop.desktop (Hidden=true)
+# Labwc gets right-click menu; wallpaper from swaybg
+
+# Start Waybar (replaces lxqt-panel)
+waybar >/dev/null 2>&1 &
 
 # Device plugged audio
 bash ~/.config/labwc/scripts/device-monitor.sh >/dev/null 2>&1 &
@@ -30,8 +32,8 @@ wl-clip-persist --clipboard regular &
 wl-paste --type text --watch cliphist store &
 wl-paste --type image --watch cliphist store &
 
-# Set wallpaper (replace with your preferred method)
-swaybg -c "#141c21" &
+# Set random wallpaper from ~/.wallpapers
+~/.config/labwc/scripts/wallpaper.sh --set &
 
 # Notification 
 dunst >/dev/null 2>&1 &

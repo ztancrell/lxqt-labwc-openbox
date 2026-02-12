@@ -29,6 +29,11 @@
     <windowRule title="Attention">
       <action name="ToggleAlwaysOnTop" />
     </windowRule>
+    <!-- Hide xwaylandvideobridge from taskbar (used for screen sharing) -->
+    <windowRule identifier="xwaylandvideobridge">
+      <skipTaskbar>yes</skipTaskbar>
+      <skipWindowSwitcher>yes</skipWindowSwitcher>
+    </windowRule>
   </windowRules>
 
   <theme>
@@ -78,7 +83,7 @@
       <action name="Reconfigure"/>
     </keybind>
     <keybind key="W-Shift-e">
-      <action name="Exit"/>
+      <action name="Execute"><command>~/.config/labwc/scripts/logout.sh</command></action>
     </keybind>
     
     <!-- Lock Screen -->
@@ -91,16 +96,16 @@
     
     <!-- Screenshots (Print key + RK61-friendly alternatives) -->
     <keybind key="Print">
-      <action name="Execute"><command>grimshot save area ~/Pictures/Screenshots/$(date +'%F-%T').png</command></action>
+      <action name="Execute"><command>sh -c 'grimshot save area ~/Pictures/Screenshots/$(date +%F-%T).png && paplay ~/.config/labwc/sound/screen-capture.oga'</command></action>
     </keybind>
     <keybind key="Shift-Print">
-      <action name="Execute"><command>grimshot copy area</command></action>
+      <action name="Execute"><command>sh -c 'grimshot copy area && paplay ~/.config/labwc/sound/screen-capture.oga'</command></action>
     </keybind>
     <keybind key="W-s">
-      <action name="Execute"><command>grimshot save area ~/Pictures/Screenshots/$(date +'%F-%T').png</command></action>
+      <action name="Execute"><command>sh -c 'grimshot save area ~/Pictures/Screenshots/$(date +%F-%T).png && paplay ~/.config/labwc/sound/screen-capture.oga'</command></action>
     </keybind>
     <keybind key="W-S-s">
-      <action name="Execute"><command>grimshot copy area</command></action>
+      <action name="Execute"><command>sh -c 'grimshot copy area && paplay ~/.config/labwc/sound/screen-capture.oga'</command></action>
     </keybind>
     
     <!-- Window Navigation -->
@@ -171,15 +176,20 @@
       <action name="ToggleMaximize"/>
     </keybind>
     
+    <!-- Wallpaper: cycle to next random wallpaper -->
+    <keybind key="W-w">
+      <action name="Execute"><command>~/.config/labwc/scripts/wallpaper.sh --next</command></action>
+    </keybind>
+    
     <!-- Media Keys (RK61 Fn layer) -->
     <keybind key="XF86AudioRaiseVolume">
-      <action name="Execute"><command>wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+</command></action>
+      <action name="Execute"><command>sh -c 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ && paplay ~/.config/labwc/sound/audio-volume-change.oga'</command></action>
     </keybind>
     <keybind key="XF86AudioLowerVolume">
-      <action name="Execute"><command>wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-</command></action>
+      <action name="Execute"><command>sh -c 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- && paplay ~/.config/labwc/sound/audio-volume-change.oga'</command></action>
     </keybind>
     <keybind key="XF86AudioMute">
-      <action name="Execute"><command>wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle</command></action>
+      <action name="Execute"><command>sh -c 'wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle && paplay ~/.config/labwc/sound/audio-volume-change.oga'</command></action>
     </keybind>
     <keybind key="XF86MonBrightnessUp">
       <action name="Execute"><command>brightnessctl set +5%</command></action>

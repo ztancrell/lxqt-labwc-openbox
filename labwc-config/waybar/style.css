@@ -1,0 +1,77 @@
+/* Vermello theme for Waybar - minimal Windows-like taskbar */
+
+* {
+    font-family: "Sans", "Helvetica Neue", Arial, sans-serif;
+    font-size: 11px;
+    min-height: 0;
+}
+
+window#waybar {
+    background-color: #141c21;
+    color: #a1a1a1;
+    border-bottom: 1px solid #3a4a54;
+}
+
+#custom-menu {
+    padding: 0 12px;
+    background-color: #263640;
+    color: #e5e5e5;
+}
+
+#custom-menu:hover {
+    background-color: #ea545c;
+    color: #ffffff;
+}
+
+#taskbar {
+    padding: 0 2px;
+}
+
+#taskbar button {
+    padding: 4px 10px;
+    min-width: 28px;
+    min-height: 20px;
+    margin: 0 1px;
+    background-color: transparent;
+    color: #a1a1a1;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+#taskbar button:hover {
+    background-color: #263640;
+    color: #e5e5e5;
+}
+
+#taskbar button.active {
+    background-color: #ea545c;
+    color: #ffffff;
+}
+
+#taskbar button.minimized {
+    color: #6a7a84;
+}
+
+#pulseaudio,
+#backlight,
+#clock {
+    padding: 0 10px;
+}
+
+#pulseaudio:hover,
+#backlight:hover {
+    background-color: #263640;
+}
+
+#clock {
+    font-weight: bold;
+}
+
+#tray {
+    padding: 0 8px;
+}
+
+#tray > .passive {
+    color: #6a7a84;
+}

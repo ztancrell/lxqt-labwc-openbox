@@ -196,6 +196,25 @@ cp -r "$SCRIPT_DIR/lxqt-config/"* "$CONFIG_DIR/lxqt/" || { print_error "Failed t
 print_status "Linking LXQt to use Labwc config..."
 ln -sfn "$CONFIG_DIR/labwc" "$CONFIG_DIR/lxqt/labwc"
 
+# Install Waybar config (replaces lxqt-panel with minimal taskbar)
+print_status "Installing Waybar configuration..."
+mkdir -p "$CONFIG_DIR/waybar"
+if [ -d "$SCRIPT_DIR/labwc-config/waybar" ]; then
+    cp "$SCRIPT_DIR/labwc-config/waybar/"* "$CONFIG_DIR/waybar/"
+    print_status "Waybar config installed (replaces lxqt-panel)"
+fi
+
+# Disable lxqt-panel - use Waybar instead (prevents panel from starting)
+print_status "Disabling lxqt-panel (using Waybar for taskbar)..."
+mkdir -p "$CONFIG_DIR/autostart"
+cp "$SCRIPT_DIR/labwc-config/templates/lxqt-panel.desktop" "$CONFIG_DIR/autostart/"
+print_status "lxqt-panel disabled"
+
+# Disable LXQt desktop - use labwc wallpaper + right-click menu only
+print_status "Disabling LXQt desktop (no icons, labwc handles right-click)..."
+cp "$SCRIPT_DIR/labwc-config/templates/lxqt-desktop.desktop" "$CONFIG_DIR/autostart/"
+print_status "LXQt desktop disabled"
+
 # Install GTK dark theme settings
 print_status "Installing GTK dark theme..."
 mkdir -p "$CONFIG_DIR/gtk-3.0"
@@ -259,6 +278,32 @@ if [ -d "$THEMES_SRC" ]; then
     fi
 else
     print_warning "No themes/ directory found in repo; skipping theme install."
+fi
+
+# Install wallpapers
+print_status "Installing wallpapers..."
+WALLPAPERS_SRC="$SCRIPT_DIR/.wallpapers"
+WALLPAPERS_DEST="$HOME/.wallpapers"
+if [ -d "$WALLPAPERS_SRC" ]; then
+    if [ -d "$WALLPAPERS_DEST" ]; then
+        # Merge wallpapers - copy new ones without overwriting existing
+        find "$WALLPAPERS_SRC" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" -o -iname "*.gif" \) | while read -r src_file; do
+            rel_path="${src_file#$WALLPAPERS_SRC/}"
+            dest_file="$WALLPAPERS_DEST/$rel_path"
+            if [ ! -f "$dest_file" ]; then
+                mkdir -p "$(dirname "$dest_file")"
+                cp "$src_file" "$dest_file"
+            fi
+        done
+        print_status "Merged new wallpapers into existing collection"
+    else
+        cp -r "$WALLPAPERS_SRC" "$WALLPAPERS_DEST"
+        print_status "Installed wallpapers to ~/.wallpapers"
+    fi
+    wallpaper_count=$(find "$WALLPAPERS_DEST" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" -o -iname "*.gif" \) | wc -l)
+    print_status "Total wallpapers available: $wallpaper_count"
+else
+    print_warning "No .wallpapers directory found in repo; skipping wallpaper install."
 fi
 
 # Set permissions
