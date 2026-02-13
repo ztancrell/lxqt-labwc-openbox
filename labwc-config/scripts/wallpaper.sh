@@ -19,7 +19,7 @@ set_wallpaper() {
         echo "No wallpapers found in $WALLPAPER_DIR"
         # Fallback to solid color
         pkill -x swaybg 2>/dev/null
-        swaybg -c "#141c21" &
+        swaybg -c "#0d0d0d" &
         return 1
     fi
     

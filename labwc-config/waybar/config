@@ -29,9 +29,9 @@
     },
 
     "clock": {
-        "format": "{:%H:%M}",
-        "format-alt": "{:%a %b %d %H:%M}",
-        "tooltip-format": "{:%A, %B %d %Y}"
+        "format": "{:%I:%M %p}",
+        "format-alt": "{:%a %b %d %I:%M %p}",
+        "tooltip-format": "{:%A, %B %d %Y %I:%M %p}"
     },
 
     "tray": {

@@ -37,7 +37,7 @@
   </windowRules>
 
   <theme>
-    <name>Vermello</name>
+    <name>NIGHT-RED</name>
     <cornerRadius>0</cornerRadius>
     <keepBorder>no</keepBorder>
     <dropShadows>no</dropShadows>
@@ -45,8 +45,8 @@
     <titlebar>
       <layout>:iconify,max,close</layout>
     </titlebar>
-    <font place="ActiveWindow"><name>Sans</name><size>7</size></font>
-    <font place="InactiveWindow"><name>Sans</name><size>7</size></font>
+    <font place="ActiveWindow"><name>Sans</name><size>6</size></font>
+    <font place="InactiveWindow"><name>Sans</name><size>6</size></font>
   </theme>
 
   <!-- Right-click menu -->

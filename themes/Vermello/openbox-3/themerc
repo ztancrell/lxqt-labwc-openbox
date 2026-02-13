@@ -56,11 +56,16 @@ window.inactive.button.*.hover.bg.color: #3a4a54
 window.inactive.button.*.hover.image.color: #ffffff
 window.inactive.button.disabled.image.color: #4a5a64
 
-!! borders
+!! borders (minimal Openbox style)
 window.active.border.color: #ea545c
 window.inactive.border.color: #ea545c
-padding.width: 4
-padding.height: 2
+padding.width: 2
+padding.height: 1
+window.titlebar.padding.width: 2
+window.titlebar.padding.height: 1
+window.button.width: 20
+window.button.height: 18
+window.button.spacing: 0
 window.client.padding.width: 0
 window.client.padding.height: 0
 border.width: 0
