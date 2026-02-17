@@ -407,7 +407,7 @@ def print_custom_footer(handle, is_static, show_icons=True):
 		{
 			"label": "Edit Theme", 
 			"action": "Execute", 
-			"cmd": "xdg-open ~/.local/share/themes/Vermello/openbox-3/themerc", 
+			"cmd": "xdg-open ~/.local/share/themes/NIGHT-RED/openbox-3/themerc", 
 			"icons": ["preferences-desktop-theme", "preferences-desktop", "applications-graphics"]
 		},
 	]

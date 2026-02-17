@@ -1,96 +1,98 @@
-!! NIGHT-RED theme (box-look.org style)
+!! NextBox (Mono) Dark - classic Openbox look, dark mode
+!! Based on NextBox Mono from OpenboxThemes (github)
+
 !! menu background
 menu.items.bg: flat
-menu.items.bg.color: #0d0d0d
+menu.items.bg.color: #1e1e1e
 menu.overlap.x: -10
 
 !! menu text
-menu.items.text.color: #a1a1a1
+menu.items.text.color: #e0e0e0
 menu.items.justify: left
-menu.items.disabled.text.color: #505050
+menu.items.disabled.text.color: #606060
 
 !! menu separator
 menu.separator.padding.height: 2
-menu.separator.color: #0d0d0d
+menu.separator.color: #1e1e1e
 
 !! menu border
 menu.border.width: 1
-menu.border.color: #2a2a2a
+menu.border.color: #404040
 
 !! menu headers
 menu.title.bg: flat
-menu.title.bg.color: #0d0d0d
-menu.title.text.color: #e5e5e5
+menu.title.bg.color: #1e1e1e
+menu.title.text.color: #ffffff
 menu.title.text.justify: center
 
 !! selected menu item
 menu.items.active.bg: flat
-menu.items.active.bg.color: #b22222
+menu.items.active.bg.color: #404040
 menu.items.active.text.color: #ffffff
 
-!! titlebar
+!! titlebar (classic openbox: subtle active = slightly lighter gray)
 window.active.title.bg: flat
-window.active.title.bg.color: #b22222
+window.active.title.bg.color: #333333
 window.inactive.title.bg: flat
-window.inactive.title.bg.color: #1a1a1a
+window.inactive.title.bg.color: #252525
 
 !! titlebar text
 window.label.text.justify: center
 window.active.label.bg: parentrelative
 window.active.label.text.color: #ffffff
 window.inactive.label.bg: parentrelative
-window.inactive.label.text.color: #808080
+window.inactive.label.text.color: #a0a0a0
 
 !! window buttons (classic Openbox style)
 window.*.button.*.bg: parentrelative
 window.active.button.*.hover.bg: flat
 window.inactive.button.*.hover.bg: flat
 window.*.button.*.pressed.bg: flat
-window.active.button.*.hover.bg.color: #8b0000
-window.active.button.*.pressed.bg.color: #6b0000
-window.active.button.*.image.color: #ffffff
+window.active.button.*.hover.bg.color: #505050
+window.active.button.*.pressed.bg.color: #606060
+window.active.button.*.image.color: #e0e0e0
 window.active.button.*.hover.image.color: #ffffff
 window.active.button.*.pressed.image.color: #ffffff
 window.active.button.disabled.image.color: #606060
-window.inactive.button.*.image.color: #808080
-window.inactive.button.*.hover.bg.color: #2a2a2a
+window.inactive.button.*.image.color: #a0a0a0
+window.inactive.button.*.hover.bg.color: #404040
 window.inactive.button.*.hover.image.color: #ffffff
 window.inactive.button.disabled.image.color: #505050
 
-!! borders (minimal Openbox style)
-window.active.border.color: #b22222
-window.inactive.border.color: #2a2a2a
-padding.width: 2
-padding.height: 1
-window.titlebar.padding.width: 2
-window.titlebar.padding.height: 1
-window.button.width: 20
-window.button.height: 18
+!! borders (minimal compact titlebar)
+window.active.border.color: #404040
+window.inactive.border.color: #333333
+padding.width: 1
+padding.height: 0
+window.titlebar.padding.width: 1
+window.titlebar.padding.height: 0
+window.button.width: 16
+window.button.height: 14
 window.button.spacing: 0
 window.client.padding.width: 0
 window.client.padding.height: 0
 border.width: 0
 window.handle.width: 2
-window.active.client.color: #0d0d0d
-window.inactive.client.color: #0d0d0d
+window.active.client.color: #1e1e1e
+window.inactive.client.color: #1e1e1e
 window.active.handle.bg: flat
-window.active.handle.bg.color: #0d0d0d
+window.active.handle.bg.color: #1e1e1e
 window.inactive.handle.bg: flat
-window.inactive.handle.bg.color: #0d0d0d
+window.inactive.handle.bg.color: #1e1e1e
 window.active.grip.bg: flat
-window.active.grip.bg.color: #0d0d0d
+window.active.grip.bg.color: #1e1e1e
 window.inactive.grip.bg: flat
-window.inactive.grip.bg.color: #0d0d0d
+window.inactive.grip.bg.color: #1e1e1e
 
 !! on-screen displays
 osd.border.width: 1
-osd.border.color: #0d0d0d
-osd.label.text.color: #b0b0b0
+osd.border.color: #1e1e1e
+osd.label.text.color: #e0e0e0
 osd.bg: flat solid
-osd.bg.color: #0d0d0d
+osd.bg.color: #1e1e1e
 osd.label.bg: flat solid
-osd.label.bg.color: #0d0d0d
+osd.label.bg.color: #1e1e1e
 osd.hilight.bg: flat solid
-osd.hilight.bg.color: #b22222
+osd.hilight.bg.color: #404040
 osd.unhilight.bg: flat solid
 osd.unhilight.bg.color: #505050

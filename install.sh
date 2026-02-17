@@ -141,17 +141,13 @@ mkdir -p "$CONFIG_DIR/labwc" || { print_error "Failed to create labwc config dir
 cp "$SCRIPT_DIR/labwc-config/autostart" "$CONFIG_DIR/labwc/"
 cp "$SCRIPT_DIR/labwc-config/environment" "$CONFIG_DIR/labwc/"
 cp "$SCRIPT_DIR/labwc-config/labwc.xml" "$CONFIG_DIR/labwc/"
+# Remove rc.xml so it cannot override theme (labwc.xml is the single source)
+rm -f "$CONFIG_DIR/labwc/rc.xml"
 
-# Preserve existing themerc if it exists (user customizations)
-if [ "$RESET_MODE" = true ]; then
-    cp "$SCRIPT_DIR/labwc-config/themerc" "$CONFIG_DIR/labwc/"
-    print_status "Installed themerc from repo (reset mode)"
-elif [ -f "$BACKUP_DIR/labwc/themerc" ]; then
-    print_status "Preserving your existing themerc (restoring from backup)..."
-    cp "$BACKUP_DIR/labwc/themerc" "$CONFIG_DIR/labwc/"
-else
-    cp "$SCRIPT_DIR/labwc-config/themerc" "$CONFIG_DIR/labwc/"
-fi
+# Install themerc and override so NIGHT-RED applies to menu + decorations
+cp "$SCRIPT_DIR/labwc-config/themerc" "$CONFIG_DIR/labwc/"
+cp "$SCRIPT_DIR/labwc-config/themerc-override" "$CONFIG_DIR/labwc/" 2>/dev/null || true
+print_status "Installed themerc (NIGHT-RED)"
 
 # Copy subdirectories (except colors - handled separately for preservation)
 cp -r "$SCRIPT_DIR/labwc-config/scripts" "$CONFIG_DIR/labwc/"
@@ -215,6 +211,16 @@ print_status "Disabling LXQt desktop (no icons, labwc handles right-click)..."
 cp "$SCRIPT_DIR/labwc-config/templates/lxqt-desktop.desktop" "$CONFIG_DIR/autostart/"
 print_status "LXQt desktop disabled"
 
+# Disable LXQt globalkeyshortcuts - allows labwc Alt+Tab to work
+print_status "Disabling LXQt globalkeyshortcuts (labwc handles Alt+Tab)..."
+cp "$SCRIPT_DIR/labwc-config/templates/lxqt-globalkeyshortcuts.desktop" "$CONFIG_DIR/autostart/"
+print_status "LXQt globalkeyshortcuts disabled"
+
+# Disable picom - X11 compositor must not run under Labwc (Wayland)
+print_status "Disabling picom autostart (Labwc is the compositor)..."
+cp "$SCRIPT_DIR/labwc-config/templates/picom.desktop" "$CONFIG_DIR/autostart/"
+print_status "Picom disabled"
+
 # Install GTK dark theme settings
 print_status "Installing GTK dark theme..."
 mkdir -p "$CONFIG_DIR/gtk-3.0"
@@ -237,6 +243,7 @@ systemctl --user enable --now labwc-menu-update.timer || print_warning "Failed t
 systemctl --user enable labwc-gtk-sync.service || print_warning "Failed to enable gtk-sync service"
 systemctl --user enable labwc-portal-restart.service || print_warning "Failed to enable portal-restart service"
 systemctl --user enable labwc-theme-watcher.service || print_warning "Failed to enable theme-watcher service"
+# Waybar started from labwc autostart (not systemd - more reliable with LXQt session)
 
 # Install Openbox themes (used by Labwc theme name lookup)
 print_status "Installing Openbox themes..."
@@ -343,5 +350,7 @@ echo ""
 print_warning "If you encounter issues, restore from backup:"
 echo "  rm -rf ~/.config/labwc ~/.config/lxqt"
 echo "  mv $BACKUP_DIR/* ~/.config/"
+echo ""
+print_status "For dark titlebar in Alacritty, add to ~/.config/alacritty/alacritty.toml:"
 echo ""
 print_status "Enjoy your Openbox-styled LXQt + Labwc desktop!"

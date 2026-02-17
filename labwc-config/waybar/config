@@ -3,13 +3,14 @@
     "position": "top",
     "height": 28,
     "spacing": 4,
+    "output": "DP-1",
     "modules-left": ["wlr/taskbar"],
     "modules-center": [],
     "modules-right": ["pulseaudio", "backlight", "clock", "tray"],
 
     "wlr/taskbar": {
         "format": "{icon}",
-        "format-alt": "{icon} {name}",
+        "format-alt": "{icon}",
         "on-click": "minimize-raise",
         "on-click-right": "close",
         "tooltip-format": "{name}",
